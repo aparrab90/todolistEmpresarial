@@ -1,39 +1,5 @@
 <template>
   <div>
-    <div class="tab-buttons">
-      <button class="tab-button" :class="{ active: activeTab === 'option1' }" @click="activeTab = 'option1'">
-        Login
-        <div class="progress" v-show="activeTab === 'option1'">
-          <div class="progress-bar"></div>
-        </div>
-      </button>
-      <button class="tab-button" :class="{ active: activeTab === 'option2' }" @click="activeTab = 'option2'">
-        Registro
-        <div class="progress" v-show="activeTab === 'option2'">
-          <div class="progress-bar"></div>
-        </div>
-      </button>
-    </div>
-
-
-
-    <div v-if="activeTab === 'option1'" class="mt-3">
-      <h3 class="mb-3">Login</h3>
-      <form @submit.prevent="login">
-        <!-- Campos de login aquí -->
-      </form>
-    </div>
-
-    <div v-if="activeTab === 'option2'" class="mt-3">
-      <h3 class="mb-3">Registro</h3>
-      <RegistrationForm />
-    </div>
-  </div>
-</template>
-
-
-<!-- <template>
-  <div>
 
 
     
@@ -44,7 +10,7 @@
       <button type="submit">Login</button>
     </form>
   </div>
-</template> -->
+</template>
   
 <script>
 import { login } from '@/services/api';
@@ -82,36 +48,3 @@ export default {
 };
 </script>
   
-<style>
-.tab-buttons {
-  display: flex;
-  /* margin-bottom: 15px; */
-}
-
-.tab-button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  /* padding: 10px 20px; */
-  font-size: 16px;
-  color: #333;
-}
-
-.tab-button.active {
-  background-color: #3498db;
-  color: white;
-}
-
-.progress {
-  height: 1px;
-  background-color: #f0f0f0;
-  /* margin-top: 10px; */
-}
-
-.progress-bar {
-  height: 100%;
-  background-color: #3498db;
-  width: 0;
-  transition: width 0.3s;
-}
-</style>

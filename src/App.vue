@@ -10,6 +10,6 @@ export default {
 };
 </script>
 
-<style>
-/* Agrega estilos globales aquí si es necesario */
+<style lang="scss">
+// @import "@/styles/inicio.scss";
 </style>
