@@ -14,7 +14,7 @@
           </b-nav> -->
         </div>
 
-        <div class="col-lg-10">
+        <div class="col-lg-7">
           <TaskForm />
         </div>
       </div>

@@ -2,13 +2,44 @@
   <div class="mt-3">
     <b-card>
       <b-form @submit.prevent="addTask">
-        <b-form-group id="taskNameGroup" label="Task Name">
-          <b-form-input v-model="taskName" required placeholder="Enter Task Name" />
-        </b-form-group>
-        <b-form-group id="taskDescriptionGroup" label="Task Description">
-          <b-form-input v-model="taskDescription" required placeholder="Enter Task Description" />
-        </b-form-group>
-        <b-button type="submit" variant="primary">Add Task</b-button>
+        <b-row>
+          <b-col>
+            <b-form-group id="taskNameGroup" label="Task Name">
+              <b-form-input ref="taskNameInput" v-model="taskName" required placeholder="Enter Task Name" />
+            </b-form-group>
+          </b-col>
+
+
+
+          <b-col cols="7">
+            <b-form-group id="dateTimeGroup" label="Time Limit">
+              <b-row>
+                <b-col cols="5">
+                  <b-form-datepicker v-model="selectedDate" required placeholder="Select Date" />
+                </b-col>
+                <!-- <b-col>
+                  <b-form-timepicker v-model="selectedTime" required placeholder="Select Time" />
+                </b-col> -->
+                <b-col class="text-end ">
+                  <b-button type="submit" variant="primary">Add Task</b-button>
+                </b-col>
+              </b-row>
+            </b-form-group>
+          </b-col>
+
+
+        </b-row>
+        <!-- <b-row>
+          <b-col cols="10" >
+            <b-form-group id="taskDescriptionGroup" label="Task Description">
+              <b-form-textarea class="form-control" v-model="taskDescription" required placeholder="Enter Task Description" rows="2" />
+            </b-form-group>
+          </b-col>
+          <b-col  class="text-end mt-4">
+            <b-button  type="submit" variant="primary">Add Task</b-button>
+          </b-col>
+        </b-row> -->
+
       </b-form>
       <!-- 
       <form @submit.prevent="addTask">
@@ -79,6 +110,11 @@ export default {
 
     showModal() {
       this.modalShow = true;
+    },
+
+    focusTaskName() {
+      // Establecer el enfoque en el campo "Task Name" al abrir el modal
+      this.$refs.taskNameInput.focus();
     },
     async fetchTask() {
       try {
