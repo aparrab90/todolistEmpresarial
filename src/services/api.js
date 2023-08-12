@@ -25,7 +25,7 @@ export const registerUser = async (fullNameUser, addressUser) => {
 };
 
 export const addTask = async (taskName, taskDescription) => {
-  const response = await apiClient.post('/api/tasks', {
+  const response = await apiClient.post('/api/addTasks', {
     taskName,
     taskDescription
   });
@@ -38,6 +38,15 @@ export const getCustomers = async () => {
     const response = await apiClient.get('/api/customers');
     return response.data;
   } catch (error) {
+    // throw error;
+  }
+};
+export const getTasks = async (userId) => {
+  try {
+    const response = await apiClient.get(`/api/tasks?userId=${userId}`);
+    return response.data;
+  } catch (error) {
+    // Manejar el error de alguna manera, lanzarlo nuevamente, mostrar un mensaje, etc.
     // throw error;
   }
 };
