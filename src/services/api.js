@@ -24,14 +24,46 @@ export const registerUser = async (fullNameUser, addressUser) => {
   return response.data;
 };
 
-export const addTask = async (taskName, taskDescription) => {
-  const response = await apiClient.post('/api/addTasks', {
-    taskName,
-    taskDescription
-  });
-  
+export const addTask = async (taskData) => {
+  console.log(taskData);
+  const response = await apiClient.post('/api/addTasks', taskData);
   return response.data;
 };
+
+export const createStepTask = async (idTask, stepTaskData) => {
+  try {
+    const response = await apiClient.post(`/api/tasks/${idTask}/createStepTask`, stepTaskData);
+    console.log('Step task created successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating step task:', error);
+    throw error;
+  }
+};
+
+export const editStatusStepTask = async (idStepTask, newStatus) => {
+  try {
+    const response = await apiClient.put(`/api/stepTasks/${idStepTask}/editStatus`, { statusStepTask: newStatus });
+    console.log('Status of Step Task updated successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error editing Step Task status:', error);
+    throw error;
+  }
+};
+
+export const editStatusTask = async (idTask, newStatus) => {
+  try {
+    const response = await apiClient.put(`/api/tasks/${idTask}/editStatus`, { statusTask: newStatus });
+    console.log('Status of Task updated successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error editing Task status:', error);
+    throw error;
+  }
+};
+
+
 
 export const getCustomers = async () => {
   try {
@@ -44,6 +76,7 @@ export const getCustomers = async () => {
 export const getTasks = async (userId) => {
   try {
     const response = await apiClient.get(`/api/tasks?userId=${userId}`);
+    console.log(response);
     return response.data;
   } catch (error) {
     // Manejar el error de alguna manera, lanzarlo nuevamente, mostrar un mensaje, etc.
