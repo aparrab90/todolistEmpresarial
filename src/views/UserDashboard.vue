@@ -5,20 +5,15 @@
 
     <div class="container-fluid d-flex flex-column pt-0" style="height: 90vh;">
       <div class="row flex-grow-1">
-        <div class="col bg-light mt-2">
-          <b-nav vertical class="bg-light">
-            <b-nav-item v-for="item in navigationItems" :key="item.id" :to="item.to" :active="isActive(item)">
-              <b-icon :icon="item.icon" class="mr-2"></b-icon>
-              {{ item.name }}
-            </b-nav-item>
-          </b-nav>
-        </div>
+        <!-- Usar el componente MenuView para mostrar el menú -->
+        <MenuView :items="navigationItems" class="col bg-light mt-2" />
 
         <div class="col-lg-8">
-          <TaskForm />
+          <!-- Mostrar el componente TaskForm solo si la opción "Today" está activa -->
+          <TaskForm v-if="isActive({ to: '/user' })" />
         </div>
         <div class="col-lg-2">
-          <!-- PRIORIDAD -->
+          <!-- PRIORIDAD (Deja este espacio vacío) -->
         </div>
       </div>
     </div>
@@ -27,16 +22,18 @@
   </div>
 </template>
 
-
 <script>
 import TaskForm from '@/components/TaskForm';
-import HeaderView from './HeaderView';
-import FooterView from './FooterView';
+import HeaderView from './general/HeaderView';
+import FooterView from './general/FooterView';
+import MenuView from './general/MenuView'; // Importa el componente MenuView
+
 export default {
   components: {
     TaskForm,
     HeaderView,
-    FooterView
+    FooterView,
+    MenuView // Agrega el componente MenuView al registro de componentes
   },
   data() {
     return {
@@ -51,7 +48,7 @@ export default {
   methods: {
     // Método para verificar si un elemento de navegación está activo
     isActive(item) {
-      // Implementar lógica para verificar si el elemento está activo, por ejemplo, basado en la ruta actual
+      // Implementar lógica para verificar si el elemento está activo, basado en la ruta actual
       // Puedes usar vue-router para obtener la ruta actual y compararla con item.to
       // Devolver true si el elemento está activo, de lo contrario, false
       // Ejemplo simplificado:
@@ -62,8 +59,7 @@ export default {
   // Otras propiedades y lógica
 };
 </script>
-  
+
 <style scoped>
 /* Estilos específicos de la vista */
 </style>
-  

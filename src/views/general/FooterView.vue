@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-navbar variant="light" type="light" class="row bg-secondary">
+        <b-navbar variant="light" type="light" class="row  footerStyle" >
             <!-- <b-navbar-nav class="d-flex justify-content-center mr-auto">
           <b-nav-item href="#">Facebook</b-nav-item>
           <b-nav-item href="#">Instagram</b-nav-item>
@@ -21,5 +21,8 @@ export default {
     name: 'FooterView',
 }
 </script>
+<style>
+
+</style>
   
   

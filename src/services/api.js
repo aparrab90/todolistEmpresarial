@@ -2,25 +2,49 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080', // Cambia esto según la URL de tu API
-  // Puedes configurar headers aquí si es necesario
+  baseURL: 'http://localhost:8080', //  API
+  //  headers
 });
 
-export const login = async (userAccess, passAccess) => {
-  const response = await apiClient.post('/api/login', {
-    userAccess,
-    passAccess
-  });
+export const login = async (identificationUser, passwordUser) => {
+  // const response = await apiClient.post('/api/Users/login', {
+  //   identificationUser,
+  //   passwordUser
+  // });
   
-  return response.data;
+  // return response.data;
+
+  if (identificationUser === '1726722638' && passwordUser === '123456') {
+    return {
+      statusCode: 200,
+      isSuccess: true,
+      errorMessages: [],
+      result: {
+        usuario: {
+          idUser: 2,
+          identificationUser: '1726722638',
+          nameUser: '123456',
+          emailUser: 'Usuario1@gmail.com',
+          passwordUser: '3f1308149ab8219e32bf9d91028c4eb4',
+          createUser: '2023-08-13T15:14:39.0779368',
+          role: 'user' // Agregar el rol
+        },
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjE3MTc5Mzc4NDgiLCJuYmYiOjE2OTE5NjI1MjMsImV4cCI6MTY5MjU2NzMyMywiaWF0IjoxNjkxOTYyNTIzfQ.jWb5zLROc03Umlljm9EFrwkHDBqZhClKdfDyqgtjbcQ'
+      }
+    };
+  } else {
+    // Simulación de respuesta ficticia de error
+    return {
+      statusCode: 400,
+      isSuccess: false,
+      errorMessages: ['El nombre de usuario o password son incorrectos'],
+      result: null
+    };
+  }
 };
 
-export const registerUser = async (fullNameUser, addressUser) => {
-  const response = await apiClient.post('/api/users', {
-    fullNameUser,
-    addressUser
-  });
-  
+export const registerUser = async (userData) => {
+  const response = await apiClient.post('/api/Users/registro', userData);
   return response.data;
 };
 
@@ -64,13 +88,35 @@ export const editStatusTask = async (idTask, newStatus) => {
 };
 
 
+const fakeUserList = [
+  {
+    "idUser": 1,
+    "identificationUser": "1717937849",
+    "nameUser": "JUAN CARLOS VELÁSQUEZ",
+    "emailUser": "juanvelasquez79@hotmail.com",
+    "passwordUser": "e2f671cbd1087c054a39de20b7018d9c",
+    "createUser": "2023-08-13T15:08:08.6151393"
+  },
+  {
+    "idUser": 2,
+    "identificationUser": "1717937848",
+    "nameUser": "USUARIO1",
+    "emailUser": "Usuario1@gmail.com",
+    "passwordUser": "3f1308149ab8219e32bf9d91028c4eb4",
+    "createUser": "2023-08-13T15:14:39.0779368"
+  }
+];
 
-export const getCustomers = async () => {
+
+
+export const getUsers = async () => {
   try {
-    const response = await apiClient.get('/api/customers');
-    return response.data;
+    // const response = await apiClient.get('/api/Users'); // Ajusta la ruta según la configuración de tu API
+    // return response.data;
+    return fakeUserList;
   } catch (error) {
-    // throw error;
+    console.error('Error fetching user list:', error);
+    return []; // Devolver una lista vacía en caso de error
   }
 };
 export const getTasks = async (userId) => {
@@ -85,7 +131,6 @@ export const getTasks = async (userId) => {
 };
 
 
-// Puedes agregar más funciones aquí para interactuar con la API
 
 export default {
   login,
@@ -140,7 +185,6 @@ export const addTask = async (taskName, taskDescription) => {
   }
 };
 
-// Puedes agregar más funciones aquí para interactuar con la API
 
 export default {
   login,
