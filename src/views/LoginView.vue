@@ -3,32 +3,27 @@
     <b-container>
       <div class="text-center">
         <h3 class="mb-4">Sign in</h3>
-      </div>
-      <div class="m-2">
-        <span>Sign in and start managing your tasks!</span>
+
+        <small class="mb-2">Sign in and start managing your tasks!</small>
       </div>
       <b-form @submit.prevent="login">
         <b-form-group label-for="username-input">
-          <b-form-input v-model="identificationUser" id="username-input" placeholder="Username" required></b-form-input>
+          <b-form-input v-model="identificationUser" id="username-input" placeholder="Username" required
+            class="m-2"></b-form-input>
         </b-form-group>
-        <br>
         <b-form-group>
-          <b-form-input v-model="passwordUser" placeholder="Password" type="password" required></b-form-input>
+          <b-form-input v-model="passwordUser" placeholder="Password" type="password" required class="m-2"></b-form-input>
         </b-form-group>
-        <div class="mt-2 text-end">
+        <div class="text-end">
           <small :class="messageClass">{{ loginMessage }}</small>
-          <b-button type="submit" variant="success">Login</b-button>
+          <b-button type="submit" variant="success" class="m-2 w-100">Login</b-button>
         </div>
       </b-form>
     </b-container>
 
     <!-- Agregar el componente WelcomeModal para mostrar el mensaje de bienvenida -->
-    <welcome-modal
-      v-if="showWelcomeModal"
-      :user-name="loggedInUserName"
-      :show-modal="showWelcomeModal"
-      @closed="handleWelcomeModalClosed"
-    />
+    <welcome-modal v-if="showWelcomeModal" :user-name="loggedInUserName" :show-modal="showWelcomeModal"
+      @closed="handleWelcomeModalClosed" />
     <HeaderView :name-user="loggedInUserName" />
   </div>
 </template>

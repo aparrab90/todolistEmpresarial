@@ -4,32 +4,41 @@
         <HeaderView />
         <br>
         <!-- Body -->
-        <div class="container-fluid d-flex flex-column pt-4" style="height: 85vh;">
+        <div class="container-fluid d-flex flex-column pt-4" style="height: 90vh;">
             <div class="row flex-grow-1">
-                <div class="col-lg-9 bg-light d-flex justify-content-center align-items-center">
+                <div class="col-lg-9 bg-white d-flex justify-content-center align-items-center">
                     <div class="row text-center">
 
                         <div class="col-12">
-                            <span class="lead">¡Organiza tus actividades!</span>
-
+                            <div class="div">
+                                <img src="./../assets/inicio.png" alt="" style="width: 25vw">
+                            </div>
+                            <h1>¡One simple to do list for you and your team!</h1>
+                            <!-- <SliderHome /> -->
                         </div>
                         <div class="col-12">
 
                             <!-- <b-button variant="primary">Empezar</b-button> -->
                         </div>
                     </div>
-                    <!-- <SliderHome /> -->
                 </div>
 
-                <div class="col-lg-3 p-3 ">
-                    <b-tabs align="end" content-class="tabs-end">
-                        <b-tab title="Login">
-                            <LoginInicial />
-                        </b-tab>
-                        <b-tab title="Register">
-                            <RegisterView />
-                        </b-tab>
-                    </b-tabs>
+                <div class="row col-lg-3 p-3 ">
+                    <!-- <div class="col-12 text-center">
+                        <img src="./../assets/login.png" alt="" width="150">
+                    </div> -->
+                    <div class="col-12 tabs-height mt-4 border-left border border-light bg-white">
+                        <br>
+                        <b-tabs align="end" content-class="tabs-end">
+                            <b-tab title="Login">
+                                <LoginInicial />
+                            </b-tab>
+                            <b-tab title="Register">
+                                <RegisterView />
+                            </b-tab>
+                        </b-tabs>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -43,7 +52,7 @@
 <script>
 import LoginInicial from './LoginView.vue'
 import RegisterView from './RegisterView.vue';
-// import SliderHome from './SliderHome.vue';
+// import SliderHome from './general/SliderHome.vue';
 import FooterView from './general/FooterView.vue';
 import HeaderView from './general/HeaderView.vue';
 
@@ -54,8 +63,9 @@ export default {
         RegisterView,
         FooterView,
         HeaderView,
-        // SliderHome
+        //  SliderHome
     },
+
 
 }
 </script>

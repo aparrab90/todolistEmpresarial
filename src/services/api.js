@@ -44,8 +44,18 @@ export const login = async (identificationUser, passwordUser) => {
 };
 
 export const registerUser = async (userData) => {
-  const response = await apiClient.post('/api/Users/registro', userData);
-  return response.data;
+  // const response = await apiClient.post('/api/Users/registro', userData);
+  // return response.data;
+  console.log(userData);
+  const fakeResponse = {
+    statusCode: 200,
+    isSuccess: true,
+    errorMessages: [],
+    result: null
+  };
+
+  // Devolvemos la respuesta falsa
+  return fakeResponse;
 };
 
 export const addTask = async (taskData) => {
