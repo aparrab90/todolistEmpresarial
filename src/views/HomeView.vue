@@ -13,7 +13,7 @@
                             <div class="div">
                                 <img src="./../assets/inicio.png" alt="" style="width: 25vw">
                             </div>
-                            <h1>¡One simple to do list for you and your team!</h1>
+                            <h1>¡One simple to do list for you!</h1>
                             <!-- <SliderHome /> -->
                         </div>
                         <div class="col-12">

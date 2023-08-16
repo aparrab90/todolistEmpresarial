@@ -2,45 +2,44 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080', //  API
+  baseURL: 'http://4.236.216.199', //  API
   //  headers
 });
 
 export const login = async (identificationUser, passwordUser) => {
-  // const response = await apiClient.post('/api/Users/login', {
-  //   identificationUser,
-  //   passwordUser
-  // });
-  
-  // return response.data;
+   const response = await apiClient.post('/api/Users/login', {
+     identificationUser,
+     passwordUser
+   });
+  // console.log("service api", response)
+  return response.data;
 
-  if (identificationUser === '1726722638' && passwordUser === '123456') {
-    return {
-      statusCode: 200,
-      isSuccess: true,
-      errorMessages: [],
-      result: {
-        usuario: {
-          idUser: 2,
-          identificationUser: '1726722638',
-          nameUser: '123456',
-          emailUser: 'Usuario1@gmail.com',
-          passwordUser: '3f1308149ab8219e32bf9d91028c4eb4',
-          createUser: '2023-08-13T15:14:39.0779368',
-          role: 'user' // Agregar el rol
-        },
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjE3MTc5Mzc4NDgiLCJuYmYiOjE2OTE5NjI1MjMsImV4cCI6MTY5MjU2NzMyMywiaWF0IjoxNjkxOTYyNTIzfQ.jWb5zLROc03Umlljm9EFrwkHDBqZhClKdfDyqgtjbcQ'
-      }
-    };
-  } else {
-    // Simulación de respuesta ficticia de error
-    return {
-      statusCode: 400,
-      isSuccess: false,
-      errorMessages: ['El nombre de usuario o password son incorrectos'],
-      result: null
-    };
-  }
+  // if (identificationUser === '1726722638' && passwordUser === '123456') {
+  //   return {
+  //     statusCode: 200,
+  //     isSuccess: true,
+  //     errorMessages: [],
+  //     result: {
+  //       usuario: {
+  //         idUser: 2,
+  //         identificationUser: '1726722638',
+  //         nameUser: '123456',
+  //         emailUser: 'Usuario1@gmail.com',
+  //         passwordUser: '3f1308149ab8219e32bf9d91028c4eb4',
+  //         createUser: '2023-08-13T15:14:39.0779368',
+  //         role: 'user' // Agregar el rol
+  //       },
+  //       token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjE3MTc5Mzc4NDgiLCJuYmYiOjE2OTE5NjI1MjMsImV4cCI6MTY5MjU2NzMyMywiaWF0IjoxNjkxOTYyNTIzfQ.jWb5zLROc03Umlljm9EFrwkHDBqZhClKdfDyqgtjbcQ'
+  //     }
+  //   };
+  // } else {
+  //   return {
+  //     statusCode: 400,
+  //     isSuccess: false,
+  //     errorMessages: ['El nombre de usuario o password son incorrectos'],
+  //     result: null
+  //   };
+  // }
 };
 
 export const registerUser = async (userData) => {

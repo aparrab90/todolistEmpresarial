@@ -9,21 +9,32 @@
 
                 <!-- TodoList centrado -->
                 <h4 class="text-center mx-auto">TodoList Five!</h4>
-                <!-- <span v-if="loggedInUser" class="ml-auto">Welcome, {{ loggedInUser }}</span> -->
+                <span v-if="isAuthenticated">Hi, {{ nameUser }}</span>
+                <span v-else>Bienvenido, Invitado</span>
             </b-navbar-brand>
         </b-navbar>
     </div>
 </template>
-  
+
 <script>
+import { isAuthenticated, getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
+
 export default {
     name: 'HeaderView',
     props: {
         loggedInUser: {
             type: String,
-            default: 'SN'
+            default: 'Invitado'
+        }
+    },
+    computed: {
+        isAuthenticated() {
+            return isAuthenticated();
+        },
+        nameUser() {
+            const authData = getAuthData();
+            return authData.nameUser || this.loggedInUser;
         }
     }
 };
 </script>
-  
