@@ -42,6 +42,8 @@
                 </b-button-group>
               </b-form-group>
             </b-col>
+           
+
             {{ selectedGroup }}
 
             <b-col class="text-end">
@@ -75,12 +77,13 @@
   
 <script>
 // import { addTask, getTasks } from '@/services/api';
- import { addTask } from '@/services/api';
+import { addTask } from '@/services/api';
+import { getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
 
 export default {
   data() {
     return {
-      userId: 1,
+      idUser: '',
       tasks: [],
       currentPage: 1,
       perPage: 4, // Número de tareas por página
@@ -106,7 +109,8 @@ export default {
         { value: 4, text: 'Viaje' },
         { value: 5, text: 'Investigación' },
       ],
-      selectedGroup: ''
+      selectedGroup: 1,
+
     };
   },
   computed: {
@@ -119,21 +123,25 @@ export default {
       const startIndex = (this.currentPage - 1) * this.perPage;
       const endIndex = startIndex + this.perPage;
       return this.sortedTasks.slice(startIndex, endIndex);
+    },
+    getUser() {
+      const authData = getAuthData();
+      return authData.idUser;
     }
   },
   methods: {
     async addTask() {
       try {
-        // Armar el objeto con los datos necesarios
         const taskData = {
-          taskName: this.taskName,
-          taskDescription: this.taskDescription,
+          nameTask: this.taskName,
+          detailTask: this.taskDescription,
+          statusTask: '0',
           limitTask: this.selectedLimitDate,
+          priorityTask: '0',
+          idUser: this.userId,
           idCategory: this.selectedGroup,
-          idUser: 1
-          // idUser: this.userId // 
         };
-
+        console.log("REGISTRO NEW TASK", taskData);
         // Llamar a la función addTask con el objeto taskData
         await addTask(taskData);
         console.log('Task added successfully');
@@ -180,11 +188,16 @@ export default {
         this.tasks.push(task); // Agregar la tarea generada al array de tareas
       }
       console.log('Random tasks added successfully', this.tasks);
-    }
+    },
+
+  },
+  mounted() {
+    this.userId = this.getUser; // Asignar el valor de idUser a la variable userId al montar el componente
   },
   created() {
-     this.fetchTask(); // Llamada a la función fetchTask al crear la instancia del componente
+    this.fetchTask(); // Llamada a la función fetchTask al crear la instancia del componente
     this.addRandomTasks(); // Llamada a la función fetchTask al crear la instancia del componente
+
   }
 };
 </script>

@@ -15,7 +15,7 @@
 
                 <h4 class="text-center mx-auto">TodoList Five!</h4>
 
-                <span v-if="isAuthenticated">Hi, {{ nameUser }}</span>
+                <span v-if="isAuthenticated">{{ idUser }} Hi, {{ nameUser }}</span>
                 <span v-else></span>
             </b-navbar-brand>
         </b-navbar>
@@ -40,6 +40,10 @@ export default {
         nameUser() {
             const authData = getAuthData();
             return authData.nameUser || this.loggedInUser;
+        },
+        idUser() {
+            const authData = getAuthData();
+            return authData.idUser || this.loggedInUser;
         }
     }
 };

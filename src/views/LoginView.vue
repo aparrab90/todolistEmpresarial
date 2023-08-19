@@ -70,7 +70,8 @@ export default {
           localStorage.setItem('token', userData.result.token); // Asegúrate de adaptar el nombre del campo
           console.log('STORAGE:', userData.result.token);
           const loggedInUserName = userData.result.usuario.nameUser;
-          setAuthData(userData.result.token, loggedInUserName);
+          const loggedIdUser = userData.result.usuario.idUser;
+          setAuthData(userData.result.token, loggedInUserName, loggedIdUser);
           // Redireccionar a la ruta UserDashboard
           this.$router.push({ name: 'UserDashboard' });
           // this.showWelcomeModal = true;

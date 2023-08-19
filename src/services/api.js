@@ -11,7 +11,7 @@ export const login = async (identificationUser, passwordUser) => {
      identificationUser,
      passwordUser
    });
-  // console.log("service api", response)
+  console.log("service api", response)
   return response.data;
 
   // if (identificationUser === '1726722638' && passwordUser === '123456') {
@@ -59,7 +59,7 @@ export const registerUser = async (userData) => {
 
 export const addTask = async (taskData) => {
   console.log(taskData);
-  const response = await apiClient.post('/api/addTasks', taskData);
+  const response = await apiClient.post('/api/Tasks/TaskRegistro', taskData);
   return response.data;
 };
 
