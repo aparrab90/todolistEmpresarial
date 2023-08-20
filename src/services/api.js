@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://4.236.216.199', //  API
+  baseURL: 'http://4.236.216.199/', //  API
   //  headers
 });
 

@@ -77,7 +77,7 @@ export default {
   },
   data() {
     return {
-
+      hoy: '',
       idUser: '',
       currentPage: 1,
       tasks: [],
@@ -177,13 +177,14 @@ export default {
     },
     addRandomTasks() {
       // Generar 10 tareas aleatorias
+      this.hoy = new Date();
       for (let i = 1; i <= 3; i++) {
         const task = {
           idTask: i,
           nameTask: `Task ${i}`,
           detailTask: `Details for Task ${i}`,
           statusTask: Math.random() < 0.5, // Generar aleatoriamente true o false
-          createTask: new Date(), // Usar la fecha actual como fecha de creación
+          createTask: moment(this.hoy).format('YYYY-MM-DD HH:mm:ss'), // Usar la fecha actual como fecha de creación
           limitTask: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000), // Generar una fecha límite dentro de los próximos 7 días
           priorityTask: Math.random() < 0.3,// Generar aleatoriamente true (prioritario) o false
           idCategory: `${i}`,

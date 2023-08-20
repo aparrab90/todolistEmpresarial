@@ -64,9 +64,6 @@ export default {
           this.loggedInUserName = userData.result.usuario.nameUser; // Obtener el nombre del usuario
           console.log('LOEGEADOOOO:', this.loggedInUserName);
           
-          this.aviso.titulo = 'Bienvenido ' + userData.result.usuario.nameUser + '!';
-          this.aviso.texto = 'Ingreso correcto';
-          this.aviso.type = 'success';
           localStorage.setItem('token', userData.result.token); // Asegúrate de adaptar el nombre del campo
           console.log('STORAGE:', userData.result.token);
           const loggedInUserName = userData.result.usuario.nameUser;
@@ -82,6 +79,7 @@ export default {
           this.loginMessage = 'Login failed. Please check your credentials.';
         }
       } catch (error) {
+        // this.$router.push({ name: 'UserDashboard' });
         // Manejo de errores de conexión o problemas en la solicitud
         console.error('Login error:', error);
         // Mostrar mensaje de error
