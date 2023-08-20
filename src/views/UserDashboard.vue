@@ -9,7 +9,6 @@
 
         <div class="col-lg-8">
           <div v-show="activeNavItem === 'Today'">
-            Elemento 1
             <TaskForm />
           </div>
           <div v-show="activeNavItem === 'Important'">

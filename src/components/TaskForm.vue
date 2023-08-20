@@ -29,7 +29,7 @@
             <b-col cols="4" class="text-start">
               <b-form-group id="limitTaskGroup">
                 <b-form-datepicker v-model="selectedLimitDate" @input="updateSelectedDate" :min="currentDate" required
-                  placeholder="Limit Task"   class="small-datepicker"/>
+                  placeholder="Limit Task" class="small-datepicker" />
               </b-form-group>
             </b-col>
             <b-col>
@@ -48,31 +48,17 @@
             {{ selectedGroup }}
 
             <b-col class="text-end">
-              <b-button type="submit" variant="success"
-               :disabled="isButtonDisabled">Agregar Tarea</b-button>
+              <b-button type="submit" variant="success" :disabled="isButtonDisabled">Agregar Tarea</b-button>
             </b-col>
           </b-row>
         </div>
       </b-form>
     </b-card>
-
-    
     <b-card class="mt-2">
+      <!-- <TaskList :tasks="dataTask" :fields="fields" :perPage="perPage" :currentPage="currentPage" /> -->
+      <TaskList :tasks="tasks" :fields="fields" :perPage="perPage" :currentPage="currentPage" />
 
-      <b-table :items="displayedTasks" :fields="fields" striped bordered responsive head-variant="light"
-        class="table table-sm">
-        <!-- Utiliza las clases de tamaño de texto directamente en las celdas -->
-        <template #cell(idTask)="data">
-          <b-form-checkbox v-model="data.value" variant="primary"
-            class="form-check form-check-inline rounded-circle"></b-form-checkbox>
-        </template>
-        <template #cell(name)="data">
-          <span class="text-muted">{{ data.value }}</span>
-        </template>
-        <!-- Resto de las columnas -->
-      </b-table>
-      <b-pagination v-model="currentPage" :total-rows="tasks.length" :per-page="perPage"
-        aria-controls="my-table"></b-pagination>
+
     </b-card>
 
   </div>
@@ -82,16 +68,20 @@
 // import { addTask, getTasks } from '@/services/api';
 import { addTask } from '@/services/api';
 import { getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
+import TaskList from './TaskList.vue'; // Ajusta la ruta a tu ubicación
 import moment from 'moment';
 
 export default {
+  components: {
+    TaskList,
+  },
   data() {
     return {
 
       idUser: '',
+      currentPage: 1,
       tasks: [],
       dataTask: [],
-      currentPage: 1,
       perPage: 4, // Número de tareas por página
       fields: [
         { key: 'idTask', label: '' },
@@ -124,12 +114,11 @@ export default {
       // Crear una copia ordenada de las tareas sin modificar el array original
       return [...this.tasks].sort((a) => (a.statusTask ? -1 : 1));
     },
-    displayedTasks() {
-      // Calcular las tareas a mostrar en la página actual
-      const startIndex = (this.currentPage - 1) * this.perPage;
-      const endIndex = startIndex + this.perPage;
-      return this.sortedTasks.slice(startIndex, endIndex);
-    },
+    // displayedTasks() {
+    //   const startIndex = (this.currentPage - 1) * this.perPage;
+    //   const endIndex = startIndex + this.perPage;
+    //   return this.sortedTasks.slice(startIndex, endIndex);
+    // },
     getUser() {
       const authData = getAuthData();
       return authData.idUser;
@@ -142,6 +131,7 @@ export default {
       // Evaluar si los campos están vacíos
       return this.taskName === '' || this.taskDescription === '';
     },
+
   },
   methods: {
     async addTask() {
@@ -224,7 +214,9 @@ export default {
   border: none;
   box-shadow: none;
 }
+
 .small-datepicker .datepicker-dropdown {
-  font-size: 0.8rem; /* Ajusta el tamaño de fuente según tus necesidades */
+  font-size: 0.8rem;
+  /* Ajusta el tamaño de fuente según tus necesidades */
 }
 </style>
