@@ -28,7 +28,8 @@
 
             <b-col cols="4" class="text-start">
               <b-form-group id="limitTaskGroup">
-                <b-form-datepicker v-model="selectedLimitDate" required placeholder="Limit Task" />
+                <b-form-datepicker v-model="selectedLimitDate" @input="updateSelectedDate" :min="currentDate" required
+                  placeholder="Limit Task"   class="small-datepicker"/>
               </b-form-group>
             </b-col>
             <b-col>
@@ -42,18 +43,20 @@
                 </b-button-group>
               </b-form-group>
             </b-col>
-           
+
 
             {{ selectedGroup }}
 
             <b-col class="text-end">
-              <b-button type="submit" variant="success">Add Task</b-button>
+              <b-button type="submit" variant="success"
+               :disabled="isButtonDisabled">Agregar Tarea</b-button>
             </b-col>
           </b-row>
         </div>
       </b-form>
     </b-card>
 
+    
     <b-card class="mt-2">
 
       <b-table :items="displayedTasks" :fields="fields" striped bordered responsive head-variant="light"
@@ -79,12 +82,15 @@
 // import { addTask, getTasks } from '@/services/api';
 import { addTask } from '@/services/api';
 import { getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
+import moment from 'moment';
 
 export default {
   data() {
     return {
+
       idUser: '',
       tasks: [],
+      dataTask: [],
       currentPage: 1,
       perPage: 4, // Número de tareas por página
       fields: [
@@ -127,7 +133,15 @@ export default {
     getUser() {
       const authData = getAuthData();
       return authData.idUser;
-    }
+    },
+    currentDate() {
+      // Calcular la fecha actual utilizando moment.js
+      return moment().format('YYYY-MM-DD');
+    },
+    isButtonDisabled() {
+      // Evaluar si los campos están vacíos
+      return this.taskName === '' || this.taskDescription === '';
+    },
   },
   methods: {
     async addTask() {
@@ -141,6 +155,8 @@ export default {
           idUser: this.userId,
           idCategory: this.selectedGroup,
         };
+
+        this.dataTask.push(taskData);
         console.log("REGISTRO NEW TASK", taskData);
         // Llamar a la función addTask con el objeto taskData
         await addTask(taskData);
@@ -154,10 +170,7 @@ export default {
       this.modalShow = true;
     },
 
-    focusTaskName() {
-      // Establecer el enfoque en el campo "Task Name" al abrir el modal
-      this.$refs.taskNameInput.focus();
-    },
+
     async fetchTask() {
       try {
         // this.US
@@ -174,7 +187,7 @@ export default {
     },
     addRandomTasks() {
       // Generar 10 tareas aleatorias
-      for (let i = 1; i <= 5; i++) {
+      for (let i = 1; i <= 3; i++) {
         const task = {
           idTask: i,
           nameTask: `Task ${i}`,
@@ -189,6 +202,10 @@ export default {
       }
       console.log('Random tasks added successfully', this.tasks);
     },
+    updateSelectedDate(date) {
+      this.selectedLimitDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
+
 
   },
   mounted() {
@@ -197,7 +214,7 @@ export default {
   created() {
     this.fetchTask(); // Llamada a la función fetchTask al crear la instancia del componente
     this.addRandomTasks(); // Llamada a la función fetchTask al crear la instancia del componente
-
+    this.selectedLimitDate = moment().format('YYYY-MM-DD HH:mm:ss');
   }
 };
 </script>
@@ -206,5 +223,8 @@ export default {
 .no-border-input .form-control {
   border: none;
   box-shadow: none;
+}
+.small-datepicker .datepicker-dropdown {
+  font-size: 0.8rem; /* Ajusta el tamaño de fuente según tus necesidades */
 }
 </style>

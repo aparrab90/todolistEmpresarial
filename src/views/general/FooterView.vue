@@ -8,7 +8,7 @@
         </b-navbar-nav> -->
             <b-navbar-nav class="d-flex justify-content-center">
                 <b-nav-text>
-                    <b-nav-text>&copy; 2023 Developer by ..</b-nav-text>
+                    <b-nav-text>&copy; 2023 Developer by <strong>TeamFive</strong> </b-nav-text>
                 </b-nav-text>
             </b-navbar-nav>
         </b-navbar>
