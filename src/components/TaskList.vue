@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-table :items="tasks" :fields="filteredFields"  responsive head-variant="light" class="table table-sm">
+        <b-table :items="sortedTasks" :fields="filteredFields" responsive head-variant="light" class="table table-sm">
             <template #cell(checkbox)="row">
                 <div class="d-flex justify-content-center align-items-center">
 
@@ -14,9 +14,10 @@
             </template>
             <template #cell(edit)="row">
                 <div class="d-flex justify-content-center align-items-center">
-                    <b-button size="sm" @click="editTask(row.item.id)" variant="light">
+                    <b-button @click="editTask(row.item)" variant="outline-primary">
                         <b-icon icon="plus"></b-icon>
                     </b-button>
+                    {{ row.item.idTask }}
                 </div>
             </template>
         </b-table>
@@ -32,6 +33,7 @@ export default {
         tasks: Array,
         perPage: Number,
         currentPage: Number,
+        task: Object  
     },
     data() {
         return {
@@ -40,17 +42,38 @@ export default {
                 { key: 'checkbox', label: 'Done', thClass: 'text-center' },
                 { key: 'nameTask', label: 'Name' },
                 { key: 'detailTask', label: 'Description' },
-                { key: 'idTask', label: 'ID' },
+                { key: 'idUser', label: 'ID' },
                 { key: 'statusTask', label: 'Status' },
+                { key: 'priorityTask', label: 'Priority' },
                 { key: 'limitTask', label: 'Limit' },
                 { key: 'edit', label: 'Steps' },
             ],
         };
     },
+    computed: {
+        // Computed property para obtener la matriz ordenada de tareas
+        sortedTasks() {
+            return this.tasks.slice().sort((taskA, taskB) => {
+                // Ordenar en función de priorityTask
+                if (taskA.priorityTask === taskB.priorityTask) {
+                    return 0;
+                } else if (taskA.priorityTask === true) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+        },
+    },
+
     methods: {
-        editTask(taskId) {
-            // Emitir el evento para editar la tarea con el ID correspondiente
-            this.$emit('editTask', taskId);
+        editTask(idTask) {
+            console.log("enviar", idTask)
+            this.$emit('edit-task', idTask); // Emitir el evento 'edit-task' con la tarea seleccionada
+        },
+        // Agrega el método handleEditTask para emitir el evento
+        handleEditTask(task) {
+            this.editTask(task);
         },
     },
     watch: {

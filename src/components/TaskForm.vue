@@ -56,8 +56,8 @@
     </b-card>
     <b-card class="mt-2">
       <!-- <TaskList :tasks="dataTask" :fields="fields" :perPage="perPage" :currentPage="currentPage" /> -->
-      <TaskList :tasks="tasks" :fields="fields" :perPage="perPage" :currentPage="currentPage" />
-
+      <TaskList :tasks="tasks" :fields="fields" :perPage="perPage" :currentPage="currentPage"
+        @edit-task="handleEditTask" />
 
     </b-card>
 
@@ -66,7 +66,7 @@
   
 <script>
 // import { addTask, getTasks } from '@/services/api';
-import { addTask } from '@/services/api';
+import { addTask, getTasks } from '@/services/api';
 import { getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
 import TaskList from './TaskList.vue'; // Ajusta la ruta a tu ubicación
 import moment from 'moment';
@@ -106,7 +106,7 @@ export default {
         { value: 5, text: 'Investigación' },
       ],
       selectedGroup: 1,
-
+      selectedTask: null,
     };
   },
   computed: {
@@ -164,7 +164,7 @@ export default {
     async fetchTask() {
       try {
         // this.US
-        // this.tasks = await getTasks(this.userId); // Supongamos que tienes el userId definido en algún lugar
+        this.tasks = await getTasks(this.userId); // Supongamos que tienes el userId definido en algún lugar
         console.log('Tasks fetched successfully', this.tasks);
         return this.tasks; // Puedes retornar las tareas para usarlas en otros lugares si es necesario
       } catch (error) {
@@ -175,28 +175,15 @@ export default {
     selectGroup(value) {
       this.selectedGroup = value;
     },
-    addRandomTasks() {
-      // Generar 10 tareas aleatorias
-      this.hoy = new Date();
-      for (let i = 1; i <= 3; i++) {
-        const task = {
-          idTask: i,
-          nameTask: `Task ${i}`,
-          detailTask: `Details for Task ${i}`,
-          statusTask: Math.random() < 0.5, // Generar aleatoriamente true o false
-          createTask: moment(this.hoy).format('YYYY-MM-DD HH:mm:ss'), // Usar la fecha actual como fecha de creación
-          limitTask: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000), // Generar una fecha límite dentro de los próximos 7 días
-          priorityTask: Math.random() < 0.3,// Generar aleatoriamente true (prioritario) o false
-          idCategory: `${i}`,
-        };
-        this.tasks.push(task); // Agregar la tarea generada al array de tareas
-      }
-      console.log('Random tasks added successfully', this.tasks);
-    },
+
     updateSelectedDate(date) {
       this.selectedLimitDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
-
+    handleEditTask(task) {
+      this.selectedTask = task; // Al hacer clic en "Editar", almacena la tarea seleccionada
+      // Emitir el evento a UserDashboard para mostrar el detalle de la tarea
+      this.$emit('show-task-detail', this.selectedTask);
+    },
 
   },
   mounted() {
@@ -204,7 +191,6 @@ export default {
   },
   created() {
     this.fetchTask(); // Llamada a la función fetchTask al crear la instancia del componente
-    this.addRandomTasks(); // Llamada a la función fetchTask al crear la instancia del componente
     this.selectedLimitDate = moment().format('YYYY-MM-DD HH:mm:ss');
   }
 };
