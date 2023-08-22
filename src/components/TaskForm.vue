@@ -1,6 +1,7 @@
 <template>
   <div class="mt-3">
     <b-card>
+      {{ idUser }}
       <b-form @submit.prevent="addTask">
         <b-row>
           <b-col>
@@ -55,9 +56,6 @@
       </b-form>
     </b-card>
     <b-card class="mt-2">
-      <!-- <TaskList :tasks="dataTask" :fields="fields" :perPage="perPage" :currentPage="currentPage" /> -->
-      <TaskList :tasks="tasks" :fields="fields" :perPage="perPage" :currentPage="currentPage"
-        @edit-task="handleEditTask" />
 
     </b-card>
 
@@ -65,36 +63,15 @@
 </template>
   
 <script>
-// import { addTask, getTasks } from '@/services/api';
-import { addTask, getTasks } from '@/services/api';
+import { addTask } from '@/services/api';
 import { getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
-import TaskList from './TaskList.vue'; // Ajusta la ruta a tu ubicación
 import moment from 'moment';
 
 export default {
-  components: {
-    TaskList,
-  },
   data() {
     return {
-      hoy: '',
-      idUser: '',
-      currentPage: 1,
-      tasks: [],
-      dataTask: [],
-      perPage: 4, // Número de tareas por página
-      fields: [
-        { key: 'idTask', label: '' },
-        { key: 'nameTask', label: 'Name' },
-        { key: 'detailTask', label: 'Detail' },
-        { key: 'statusTask', label: 'Status' },
-        { key: 'createTask', label: 'Created' },
-        { key: 'limitTask', label: 'Limit' },
-        { key: 'priorityTask', label: 'Priority' },
-        { key: 'idCategory', label: 'Cat' }
-      ],
 
-      modalShow: false,
+
       taskName: '',
       taskDescription: '',
       selectedLimitDate: '',
@@ -110,16 +87,7 @@ export default {
     };
   },
   computed: {
-    sortedTasks() {
-      // Crear una copia ordenada de las tareas sin modificar el array original
-      return [...this.tasks].sort((a) => (a.statusTask ? -1 : 1));
-    },
-    // displayedTasks() {
-    //   const startIndex = (this.currentPage - 1) * this.perPage;
-    //   const endIndex = startIndex + this.perPage;
-    //   return this.sortedTasks.slice(startIndex, endIndex);
-    // },
-    getUser() {
+    idUser() {
       const authData = getAuthData();
       return authData.idUser;
     },
@@ -132,52 +100,42 @@ export default {
       return this.taskName === '' || this.taskDescription === '';
     },
 
+
   },
+
   methods: {
     async addTask() {
       try {
         const taskData = {
           nameTask: this.taskName,
           detailTask: this.taskDescription,
-          statusTask: '0',
+          statusTask: 'false',
           limitTask: this.selectedLimitDate,
-          priorityTask: '0',
-          idUser: this.userId,
+          priorityTask: 'false',
+          idUser: this.idUser,
           idCategory: this.selectedGroup,
         };
 
-        this.dataTask.push(taskData);
-        console.log("REGISTRO NEW TASK", taskData);
-        // Llamar a la función addTask con el objeto taskData
-        await addTask(taskData);
-        console.log('Task added successfully');
+        // await addTask(taskData); // Agregar la tarea a la API
+        this.$emit('update-task', this.idUser);
+        // Emitir el evento personalizado al agregar una tarea, pasando la lista actualizada
+        const updatedTasks = await addTask(taskData); // Agregar la tarea y obtener la nueva lista
+        this.$emit('task-added', updatedTasks);
+        console.log('Task added successfully', this.idUser);
       } catch (error) {
         console.error('Error adding task:', error);
       }
     },
 
-    showModal() {
-      this.modalShow = true;
-    },
 
 
-    async fetchTask() {
-      try {
-        // this.US
-        this.tasks = await getTasks(this.userId); // Supongamos que tienes el userId definido en algún lugar
-        console.log('Tasks fetched successfully', this.tasks);
-        return this.tasks; // Puedes retornar las tareas para usarlas en otros lugares si es necesario
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-        throw error; // Puedes lanzar el error nuevamente para manejarlo en un nivel superior si es necesario
-      }
-    },
+
     selectGroup(value) {
       this.selectedGroup = value;
     },
 
     updateSelectedDate(date) {
-      this.selectedLimitDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+      this.selectedLimitDate = moment(date).toISOString();
     },
     handleEditTask(task) {
       this.selectedTask = task; // Al hacer clic en "Editar", almacena la tarea seleccionada
@@ -186,11 +144,9 @@ export default {
     },
 
   },
-  mounted() {
-    this.userId = this.getUser; // Asignar el valor de idUser a la variable userId al montar el componente
-  },
-  created() {
-    this.fetchTask(); // Llamada a la función fetchTask al crear la instancia del componente
+
+  async mounted() {
+
     this.selectedLimitDate = moment().format('YYYY-MM-DD HH:mm:ss');
   }
 };

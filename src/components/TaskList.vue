@@ -1,13 +1,14 @@
 <template>
     <div>
-        <b-table :items="sortedTasks" :fields="filteredFields" responsive head-variant="light" class="table table-sm">
+
+        <b-table :fields="filteredFields" :items="tasks" responsive head-variant="light" class="table table-sm">
             <template #cell(checkbox)="row">
                 <div class="d-flex justify-content-center align-items-center">
 
                     <div class="form-check">
                         <input class="form-check-input form-check-input-lg" type="checkbox" v-model="row.item.selected"
-                            style="transform: scale(2); border-radius: 5rem; ">
-                        <!-- Ajusta el valor de scale según tu preferencia -->
+                            style="transform: scale(2); border-radius: 5rem;"
+                            @change="handleCheckboxChange(row.item.idTask)">
                         <label class="form-check-label"></label>
                     </div>
                 </div>
@@ -23,17 +24,16 @@
         </b-table>
         <b-pagination v-model="internalPage" :total-rows="tasks.length" :per-page="perPage"
             aria-controls="my-table"></b-pagination>
+
     </div>
 </template>
   
 <script>
+import { getTasks, editStatusTask } from '@/services/api';
+import { getAuthData } from '@/services/auth';
 export default {
     name: 'TaskList',
     props: {
-        tasks: Array,
-        perPage: Number,
-        currentPage: Number,
-        task: Object  
     },
     data() {
         return {
@@ -48,38 +48,88 @@ export default {
                 { key: 'limitTask', label: 'Limit' },
                 { key: 'edit', label: 'Steps' },
             ],
+            tasks: [],
+            perPage: 10, // Número de tareas por página
+            fields: [
+                { key: 'idTask', label: '' },
+                { key: 'nameTask', label: 'Name' },
+                { key: 'detailTask', label: 'Detail' },
+                { key: 'statusTask', label: 'Status' },
+                { key: 'createTask', label: 'Created' },
+                { key: 'limitTask', label: 'Limit' },
+                { key: 'priorityTask', label: 'Priority' },
+                { key: 'idCategory', label: 'Cat' }
+            ],
         };
     },
     computed: {
-        // Computed property para obtener la matriz ordenada de tareas
-        sortedTasks() {
-            return this.tasks.slice().sort((taskA, taskB) => {
-                // Ordenar en función de priorityTask
-                if (taskA.priorityTask === taskB.priorityTask) {
-                    return 0;
-                } else if (taskA.priorityTask === true) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            });
+        tasksToShow() {
+            const startIndex = (this.internalPage - 1) * this.perPage;
+            const endIndex = startIndex + this.perPage;
+            return this.tasks.slice(startIndex, endIndex);
+        },
+
+        idUser() {
+            const authData = getAuthData();
+            return authData.idUser;
         },
     },
-
     methods: {
         editTask(idTask) {
-            console.log("enviar", idTask)
-            this.$emit('edit-task', idTask); // Emitir el evento 'edit-task' con la tarea seleccionada
+            this.$emit('edit-task', idTask);
         },
-        // Agrega el método handleEditTask para emitir el evento
         handleEditTask(task) {
             this.editTask(task);
+        },
+        async fetchTask() {
+            try {
+                this.tasks = await getTasks(this.idUser);
+                console.log("taskssss", this.tasks)
+                return this.tasks;
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+                throw error;
+            }
+        },
+
+        handleTaskAdded(userId) {
+            console.log("addddd", userId)
+            if (userId === this.idUser) {
+                // Actualizar la lista de tareas solo si el evento es para el usuario actual
+                this.fetchTasks();
+            }
+        },
+        handleCheckboxChange(item) {
+            // Aquí puedes ejecutar tu función y pasar row.item como argumento
+            console.log("Checkbox cambiado para:", item);
+
+            // Por ejemplo, llamar a una función para procesar el cambio
+            this.updateStatusTask(item);
+        },
+        async updateStatusTask(newPriority) {
+            console.log("new priority", newPriority)
+            try {
+                const oppositePriority = newPriority === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
+                await editStatusTask(this.localTask.idTask, oppositePriority);
+                // Por ejemplo, actualiza la lista de tareas llamando a fetchTask
+                console.log('Task updated successfully');
+            } catch (error) {
+                console.error('Error updating task:', error);
+            }
         },
     },
     watch: {
         internalPage(newPage) {
             this.$emit('update:currentPage', newPage);
         },
+    },
+    async mounted() {
+        await this.fetchTask();
+    },
+    created() {
+        this.fetchTask();
+        // Escuchar el evento 'task-added' y llamar a handleTaskAdded cuando se emite
+        this.$root.$on('task-added', this.handleTaskAdded);
     },
 };
 </script>
