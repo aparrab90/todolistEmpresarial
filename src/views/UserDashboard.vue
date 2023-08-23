@@ -10,17 +10,17 @@
         <div class="col-lg-7">
           <div v-show="activeNavItem === 'Today'">
             <TaskForm @show-task-detail="handleShowTaskDetail" @task-added="handleTaskAdded" @update-task="actualizar" />
-            <TaskList :tasks="tasks" @edit-task="handleEditTask" />
+            <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" />
           </div>
           <div v-show="activeNavItem === 'Important'">
-            Elemento 2
-            <b-card>
-
-              <TaskList :tasks="tasks" @edit-task="handleEditTask" />
+            <b-card  class="mt-3">
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" />
             </b-card>
           </div>
           <div v-show="activeNavItem === 'All Tasks'">
-            Elemento 3
+            <b-card  class="mt-3">
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" />
+            </b-card>
           </div>
         </div>
         <div class="col-lg-3">

@@ -1,14 +1,13 @@
 <template>
     <div>
-
+        SELECCIONADO {{ menuLocal }}
         <b-table :fields="filteredFields" :items="tasks" responsive head-variant="light" class="table table-sm">
             <template #cell(checkbox)="row">
                 <div class="d-flex justify-content-center align-items-center">
 
                     <div class="form-check">
                         <input class="form-check-input form-check-input-lg" type="checkbox" v-model="row.item.selected"
-                            style="transform: scale(2); border-radius: 5rem;"
-                            @change="handleCheckboxChange(row.item.idTask)">
+                            style="transform: scale(2); border-radius: 5rem;" @change="handleCheckboxChange(row.item)">
                         <label class="form-check-label"></label>
                     </div>
                 </div>
@@ -34,6 +33,7 @@ import { getAuthData } from '@/services/auth';
 export default {
     name: 'TaskList',
     props: {
+        menu: String
     },
     data() {
         return {
@@ -49,7 +49,7 @@ export default {
                 { key: 'edit', label: 'Steps' },
             ],
             tasks: [],
-            perPage: 10, // Número de tareas por página
+            perPage: 2, // Número de tareas por página
             fields: [
                 { key: 'idTask', label: '' },
                 { key: 'nameTask', label: 'Name' },
@@ -60,6 +60,7 @@ export default {
                 { key: 'priorityTask', label: 'Priority' },
                 { key: 'idCategory', label: 'Cat' }
             ],
+            menuLocal: this.menu
         };
     },
     computed: {
@@ -82,14 +83,19 @@ export default {
             this.editTask(task);
         },
         async fetchTask() {
-            try {
-                this.tasks = await getTasks(this.idUser);
-                console.log("taskssss", this.tasks)
-                return this.tasks;
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-                throw error;
+            const original = await getTasks(this.idUser);
+            console.log("taskssss", this.menuLocal, this.tasks)
+
+            let filteredTasks = [...original]; // Copia del array original
+
+            if (this.menuLocal === 'Today') {
+                filteredTasks = original.filter(task => task.statusTask === 'false');
             }
+            if (this.menuLocal === 'Important') {
+                filteredTasks = original.filter(task => task.statusTask === 'true');
+            }
+
+            this.tasks = filteredTasks;
         },
 
         handleTaskAdded(userId) {
@@ -100,18 +106,16 @@ export default {
             }
         },
         handleCheckboxChange(item) {
-            // Aquí puedes ejecutar tu función y pasar row.item como argumento
             console.log("Checkbox cambiado para:", item);
-
-            // Por ejemplo, llamar a una función para procesar el cambio
             this.updateStatusTask(item);
         },
-        async updateStatusTask(newPriority) {
-            console.log("new priority", newPriority)
+        async updateStatusTask(dataTask) {
+            console.log("new priority", dataTask)
             try {
-                const oppositePriority = newPriority === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
-                await editStatusTask(this.localTask.idTask, oppositePriority);
+                const oppositeStatus = dataTask.statusTask === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
+                await editStatusTask(dataTask.idTask, oppositeStatus);
                 // Por ejemplo, actualiza la lista de tareas llamando a fetchTask
+                this.fetchTask(); 
                 console.log('Task updated successfully');
             } catch (error) {
                 console.error('Error updating task:', error);
@@ -122,6 +126,12 @@ export default {
         internalPage(newPage) {
             this.$emit('update:currentPage', newPage);
         },
+        menu(newMenuValue) {
+            // Actualizar la variable local `menuLocal` cuando la prop `menu` cambie
+            this.menuLocal = newMenuValue;
+            this.fetchTask(); 
+            
+        }
     },
     async mounted() {
         await this.fetchTask();
