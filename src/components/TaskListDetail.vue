@@ -25,9 +25,7 @@
       <b-form-group label="Detail">
         <b-form-input v-model="localTask.detailTask" />
       </b-form-group>
-      <b-form-group label="Status">
-        <b-form-checkbox v-model="localTask.statusTask" />
-      </b-form-group>
+     
       <b-button @click="updateTask">Update Task</b-button>
     </b-card>
   </div>
@@ -42,7 +40,8 @@ export default {
   },
   data() {
     return {
-      localTask: { ...this.selectedTask } // Copy the selectedTask into local data
+      localTask: { ...this.selectedTask } 
+      
     };
   },
   computed: {

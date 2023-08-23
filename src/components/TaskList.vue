@@ -30,6 +30,7 @@
 <script>
 import { getTasks, editStatusTask } from '@/services/api';
 import { getAuthData } from '@/services/auth';
+import moment from 'moment';
 export default {
     name: 'TaskList',
     props: {
@@ -89,10 +90,11 @@ export default {
             let filteredTasks = [...original]; // Copia del array original
 
             if (this.menuLocal === 'Today') {
-                filteredTasks = original.filter(task => task.statusTask === 'false');
+                const todayDate = moment().format('YYYY-MM-DD');
+                filteredTasks = filteredTasks.filter(task => task.limitTask >= todayDate);
             }
             if (this.menuLocal === 'Important') {
-                filteredTasks = original.filter(task => task.statusTask === 'true');
+                filteredTasks = original.filter(task => task.priorityTask === 'true');
             }
 
             this.tasks = filteredTasks;
