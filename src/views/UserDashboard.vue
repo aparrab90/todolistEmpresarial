@@ -10,16 +10,16 @@
         <div class="col-lg-7">
           <div v-show="activeNavItem === 'Today'">
             <TaskForm @show-task-detail="handleShowTaskDetail" @task-added="handleTaskAdded" @update-task="actualizar" />
-            <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" />
+            <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" />
           </div>
           <div v-show="activeNavItem === 'Important'">
-            <b-card  class="mt-3">
-              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" />
+            <b-card class="mt-3">
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" />
             </b-card>
           </div>
           <div v-show="activeNavItem === 'All Tasks'">
-            <b-card  class="mt-3">
-              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" />
+            <b-card class="mt-3">
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" />
             </b-card>
           </div>
         </div>

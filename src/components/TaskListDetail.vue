@@ -15,18 +15,21 @@
           </b-button>
         </b-col>
       </b-row>
-      {{ localTask }}
+      <!-- {{ localTask }} -->
       <b-form-group label="ID">
         <b-form-input v-model="localTask.idTask" disabled />
       </b-form-group>
       <b-form-group label="Name Task">
-        <b-form-input v-model="localTask.nameTask" />
+        <b-form-input v-model="localTask.nameTask" class="no-border-input" />
       </b-form-group>
       <b-form-group label="Detail">
         <b-form-input v-model="localTask.detailTask" />
       </b-form-group>
-     
-      <b-button @click="updateTask">Update Task</b-button>
+      <template #footer>
+        <div class="text-end">
+          <b-button @click="updateTask">Update Task</b-button>
+        </div>
+      </template>
     </b-card>
   </div>
 </template>
@@ -92,7 +95,7 @@ export default {
       }
     },
     getStarFill() {
-      return this.localTask.priorityTask === "false" ? "light" : "yellow";
+      return this.localTask.priorityTask === "false" ? "lightgray" : "yellow";
     }
   },
 };
