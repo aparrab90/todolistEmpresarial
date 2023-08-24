@@ -27,16 +27,16 @@
         <div class="mt-1">
           <b-row>
 
-            <b-col cols="4" class="text-start">
+            <b-col cols="5" class="text-start">
               <b-form-group id="limitTaskGroup">
                 <b-form-datepicker v-model="selectedLimitDate" @input="updateSelectedDate" :min="currentDate" required
                   placeholder="Limit Task" class="small-datepicker" />
               </b-form-group>
             </b-col>
             <b-col>
-              <b-form-group id="groupSelectGroup" class="mb-3" title="Select Category">
+              <b-form-group id="groupSelectGroup" class="mb-3 sm" title="Select Category">
                 <b-button-group>
-                  <b-button v-for="category in groupOptions" :key="category.value"
+                  <b-button v-for="category in groupOptions" :key="category.value" class="btn-sm"
                     :variant="selectedGroup === category.value ? 'primary' : 'outline-secondary'"
                     @click="selectedGroup = category.value">
                     {{ category.text }}
@@ -49,16 +49,14 @@
             {{ selectedGroup }}
 
             <b-col class="text-end">
-              <b-button type="submit" variant="success" :disabled="isButtonDisabled">Agregar Tarea</b-button>
+              <b-button type="submit" variant="success" :disabled="isButtonDisabled">+</b-button>
             </b-col>
           </b-row>
         </div>
       </b-form>
     </b-card>
-    <b-card class="mt-2">
 
-    </b-card>
-
+    <AvisoModal :aviso="aviso" />
   </div>
 </template>
   
@@ -70,7 +68,11 @@ import moment from 'moment';
 export default {
   data() {
     return {
-
+      aviso: {
+        titulo: '',
+        texto: '',
+        type: 'success' // Puedes cambiar el tipo de aviso según tus necesidades
+      },
 
       taskName: '',
       taskDescription: '',
@@ -115,20 +117,19 @@ export default {
           idUser: this.idUser,
           idCategory: this.selectedGroup,
         };
+        // this.$emit('update-task', this.idUser);
 
-        // await addTask(taskData); // Agregar la tarea a la API
-        this.$emit('update-task', this.idUser);
-        // Emitir el evento personalizado al agregar una tarea, pasando la lista actualizada
-        const updatedTasks = await addTask(taskData); // Agregar la tarea y obtener la nueva lista
+        const updatedTasks = await addTask(this.$store, taskData);
         this.$emit('task-added', updatedTasks);
+        this.aviso.titulo = 'New Task!';
+        this.aviso.texto = taskData.nameTask;
+        this.aviso.type = 'success';
+
         console.log('Task added successfully', this.idUser);
       } catch (error) {
         console.error('Error adding task:', error);
       }
     },
-
-
-
 
     selectGroup(value) {
       this.selectedGroup = value;
@@ -138,15 +139,13 @@ export default {
       this.selectedLimitDate = moment(date).toISOString();
     },
     handleEditTask(task) {
-      this.selectedTask = task; // Al hacer clic en "Editar", almacena la tarea seleccionada
-      // Emitir el evento a UserDashboard para mostrar el detalle de la tarea
+      this.selectedTask = task;
       this.$emit('show-task-detail', this.selectedTask);
     },
 
   },
 
   async mounted() {
-
     this.selectedLimitDate = moment().format('YYYY-MM-DD HH:mm:ss');
   }
 };

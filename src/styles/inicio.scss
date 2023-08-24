@@ -74,3 +74,23 @@ body {
   font-size: 0.8rem;
   /* Ajusta el tamaño de fuente según tus necesidades */
 }
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: blue orange;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: white;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: blue;
+  border-radius: 15px;
+  border: 3px solid lightgray;
+}

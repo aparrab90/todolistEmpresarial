@@ -1,12 +1,12 @@
 <template>
   <div class="mt-3">
     <b-card>
-      <b-row class="text-center">
-        <b-col lg="6">
-          <h3>Task Detail</h3>
+      <b-row class="text-end">
+        <b-col lg="8">
+          <h3>Edit Task</h3>
         </b-col>
-        <b-col lg="6">
-          <b-button variant="light" @click="updatePriorityTask(localTask.priorityTask)">
+        <b-col lg="">
+          <b-button variant="transparent" @click="updatePriorityTask(localTask.priorityTask)">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" :fill="getStarFill()" class="bi bi-star-fill"
               viewBox="0 0 16 16">
               <path
@@ -16,18 +16,47 @@
         </b-col>
       </b-row>
       <!-- {{ localTask }} -->
-      <b-form-group label="ID">
+      <!-- <b-form-group label="ID">
         <b-form-input v-model="localTask.idTask" disabled />
+      </b-form-group> -->
+      <b-row>
+        <b-col lg="12">
+          <div class="m-1">
+
+            <b-form-group>
+              <b-form-input v-model="localTask.nameTask" class="no-border-input" />
+            </b-form-group>
+          </div>
+
+        </b-col>
+        <b-col lg="12">
+          <div class="m-1">
+            <b-form-group>
+              <b-form-textarea v-model="localTask.detailTask" rows="5" />
+            </b-form-group>
+          </div>
+        </b-col>
+      </b-row>
+      <b-row class="text-left">
+        <b-col>
+          <h4>Steps</h4>
+        </b-col>
+      </b-row>
+      <b-form-group label="Name Step">
+        <b-form-input v-model="localSteps.nameStepTask" placeholder="Name Step" />
       </b-form-group>
-      <b-form-group label="Name Task">
-        <b-form-input v-model="localTask.nameTask" class="no-border-input" />
+
+      <b-form-group label="Detail Step">
+        <b-form-input v-model="localSteps.detailStepTask" placeholder="Detail Step" />
       </b-form-group>
-      <b-form-group label="Detail">
-        <b-form-input v-model="localTask.detailTask" />
-      </b-form-group>
+
+
+
+
+
       <template #footer>
         <div class="text-end">
-          <b-button @click="updateTask">Update Task</b-button>
+          <b-button @click="updateTask" variant="success">Save</b-button>
         </div>
       </template>
     </b-card>
@@ -43,8 +72,14 @@ export default {
   },
   data() {
     return {
-      localTask: { ...this.selectedTask } 
-      
+      localTask: { ...this.selectedTask },
+      localSteps:
+      {
+        nameStepTask: '',
+        detailStepTask: '',
+        statusStepTask: false,
+        idTask: ''
+      },
     };
   },
   computed: {

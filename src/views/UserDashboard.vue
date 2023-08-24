@@ -3,23 +3,31 @@
     <HeaderView />
 
     <div class="container-fluid d-flex flex-column pt-0 mt-5" style="height:50%">
-      <div class="row flex-grow-1 mt-3">
+      <div class="row flex-grow-1 mt-3 m-2">
         <!-- Usar el componente MenuView para mostrar el menú -->
         <MenuView :items="navigationItems" @selectItem="handleNavigation" class="col bg-light mt-2" />
 
-        <div class="col-lg-7">
+        <div :class="['col-lg-7', !selectedTask ? 'col-lg-10' : 'col-lg-7']">
           <div v-show="activeNavItem === 'Today'">
             <TaskForm @show-task-detail="handleShowTaskDetail" @task-added="handleTaskAdded" @update-task="actualizar" />
-            <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" />
+            <b-card class="mt-1">
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask"
+                :refresh="refresh" />
+
+            </b-card>
           </div>
           <div v-show="activeNavItem === 'Important'">
             <b-card class="mt-3">
-              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" />
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask"
+                :refresh="refresh" />
+              <!-- <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" /> -->
             </b-card>
           </div>
           <div v-show="activeNavItem === 'All Tasks'">
             <b-card class="mt-3">
-              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" />
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask"
+                :refresh="refresh" />
+              <!-- <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" /> -->
             </b-card>
           </div>
         </div>
@@ -43,7 +51,7 @@ import TaskList from '@/components/TaskList.vue'; // Agrega la importación del 
 import HeaderView from './general/HeaderView';
 import FooterView from './general/FooterView';
 import MenuView from './general/MenuView';
-
+import store from '@/store/index';
 export default {
   components: {
     TaskForm,
@@ -66,7 +74,9 @@ export default {
       tasks: [], // Agrega esta propiedad para almacenar las tareas
       perPage: 10, // Define la cantidad de tareas por página
       currentPage: 1, // Define la página actual
-      tareas: []
+      tareas: [],
+      refresh: false,
+      store
     };
   },
   watch: {
@@ -102,6 +112,7 @@ export default {
     handleTaskAdded(updatedTasks) {
       console.log("recibe userdash", updatedTasks)
       this.tasks = updatedTasks; // Actualizar el arreglo de tareas con las tareas actualizadas
+      this.refresh = true;
     },
   }
 

@@ -30,7 +30,7 @@
                     <div class="col-12 tabs-height mt-4 border-left border border-light bg-white">
                         <br>
                         <b-tabs align="end" content-class="tabs-end">
-                            <b-tab title="Login">
+                            <b-tab active title="Login">
                                 <LoginInicial />
                             </b-tab>
                             <b-tab title="Register">

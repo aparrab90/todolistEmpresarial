@@ -1,8 +1,12 @@
 <template>
     <div>
-        {{ localArray }}
+        <h1>{{ refresh }}</h1>
+        <!-- {{ store.getters.getTaskStore }} -->
+        <!-- {{ getTaskStore }} -->
+        <!-- {{ localArray }} -->
         <!-- SELECCIONADO {{ tasks[0] }} -->
-        <b-table :fields="filteredFields" :items="tasks" responsive head-variant="light" class="table table-sm">
+        <b-table :fields="filteredFields" :items="getTaskStore" responsive head-variant="light" class="table table-sm"
+            :style="taskListStyle">
 
 
             <template #cell(priorityTask)="row">
@@ -49,8 +53,9 @@
             </template>
             <template #cell(idTask)="row">
                 <div v-if="getTaskCellClass(row.item.idTask)['ident']">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" :fill="getTaskCellClass(row.item.idTask)['color']"
-                        class="bi bi-chevron-compact-right" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
+                        :fill="getTaskCellClass(row.item.idTask)['color']" class="bi bi-chevron-compact-right"
+                        viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
                             d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z" />
                     </svg>
@@ -59,8 +64,7 @@
                 </div>
             </template>
         </b-table>
-        <b-pagination v-model="internalPage" :total-rows="tasks.length" :per-page="perPage"
-            aria-controls="my-table"></b-pagination>
+
 
     </div>
 </template>
@@ -69,28 +73,29 @@
 import { getTasks, editStatusTask, editTaskPriority } from '@/services/api';
 import { getAuthData } from '@/services/auth';
 import moment from 'moment';
+import { store } from "../store/index";
+import { mapGetters } from 'vuex';
 export default {
     name: 'TaskList',
     props: {
         menu: String,
-        selectedTask: Object
+        selectedTask: Object,
+        refresh: Boolean
     },
     data() {
         return {
             internalPage: this.currentPage,
             filteredFields: [
-                { key: 'priorityTask', label: 'Priority' },
-                { key: 'checkbox', label: 'Done', thClass: 'text-center' },
-                { key: 'nameTask', label: 'Name' },
-                { key: 'detailTask', label: 'Description' },
-                { key: 'idUser', label: 'ID' },
-                { key: 'statusTask', label: 'Status' },
-                { key: 'limitTask', label: 'Limit' },
-                { key: 'edit', label: 'Steps' },
-                { key: 'idTask', label: '' },
+                { key: 'priorityTask', label: '', thClass: 'col-md-1' },
+                { key: 'checkbox', label: 'Done', thClass: 'text-center col-md-1', tdClass: 'text-center col-md-1' },
+                { key: 'nameTask', label: 'Name', thClass: 'col-md-3' },
+                { key: 'detailTask', label: 'Description', thClass: 'col-md-4' },
+                { key: 'limitTask', label: 'Limit', thClass: 'col-md-3' },
+                { key: 'edit', label: '', thClass: 'col-md' },
+                { key: 'idTask', label: '', thClass: 'col-md' },
             ],
             tasks: [],
-            perPage: 10, // Número de tareas por página
+            perPage: 3, // Número de tareas por página
             fields: [
                 { key: 'idTask', label: '' },
                 { key: 'nameTask', label: 'Name' },
@@ -102,10 +107,12 @@ export default {
                 { key: 'idCategory', label: 'Cat' }
             ],
             menuLocal: this.menu,
-            localArray: []
+            localArray: [],
+            taskListStyle: '',
         };
     },
     computed: {
+        ...mapGetters('todoModule', ['getTaskStore']),
         tasksToShow() {
             const startIndex = (this.internalPage - 1) * this.perPage;
             const endIndex = startIndex + this.perPage;
@@ -126,29 +133,30 @@ export default {
             this.editTask(task);
         },
         async fetchTask() {
-            const original = await getTasks(this.idUser);
-            console.log("taskssss", this.menuLocal, this.tasks)
+            const original = await getTasks(this.$store, this.idUser);
 
             let filteredTasks = [...original]; // Copia del array original
 
             if (this.menuLocal === 'Today') {
-                const todayDate = moment().format('YYYY-MM-DD');
-                filteredTasks = filteredTasks.filter(task => task.limitTask >= todayDate);
+                filteredTasks = filteredTasks.filter(task => (task.statusTask === 'false'));
+                this.taskListStyle = 'height: 40vh; overflow-y: scroll;';
             }
             if (this.menuLocal === 'Important') {
                 filteredTasks = original.filter(task => task.priorityTask === 'true');
+                this.taskListStyle = 'height: 70vh; overflow-y: scroll;';
             }
 
+
+
             this.tasks = filteredTasks;
+            console.log("TODOS", this.tasks)
         },
         async updatePriorityTask(dataTask) {
-            // console.log("new priority", dataTask)
             try {
                 const oppositePriority = dataTask.priorityTask === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
                 await editTaskPriority(dataTask.idTask, oppositePriority);
-                // Por ejemplo, actualiza la lista de tareas llamando a fetchTask
-                this.fetchTask();
                 console.log('Task updated successfully');
+                this.fetchTask();
             } catch (error) {
                 console.error('Error updating task:', error);
             }
@@ -156,7 +164,6 @@ export default {
         handleTaskAdded(userId) {
             console.log("addddd", userId)
             if (userId === this.idUser) {
-                // Actualizar la lista de tareas solo si el evento es para el usuario actual
                 this.fetchTasks();
             }
         },
@@ -168,10 +175,8 @@ export default {
             console.log("new priority", dataTask)
             try {
                 const oppositeStatus = dataTask.statusTask === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
-                await editStatusTask(dataTask.idTask, oppositeStatus);
-                // Por ejemplo, actualiza la lista de tareas llamando a fetchTask
-                this.fetchTask();
-                console.log('Task updated successfully');
+                const newTasks = await editStatusTask(this.$store, dataTask.idTask, oppositeStatus);
+                this.tasks = newTasks; //this.fetchTask();
             } catch (error) {
                 console.error('Error updating task:', error);
             }
@@ -184,39 +189,44 @@ export default {
         },
         getTaskCellClass(idTask) {
             if (this.localArray == idTask) {
-                return { ident: true, color: 'blue' };
+                return { ident: true, color: 'gray' };
             } else {
                 return '';
             }
-        }
+        },
+
+
     },
     watch: {
         internalPage(newPage) {
             this.$emit('update:currentPage', newPage);
         },
         menu(newMenuValue) {
-            // Actualizar la variable local `menuLocal` cuando la prop `menu` cambie
             this.menuLocal = newMenuValue;
             this.fetchTask();
 
         },
         selectedTask: {
             handler(newSelectedTask) {
-                // Limpiar el arreglo local y asignar el objeto en un array
-                this.localArray = '';
                 if (newSelectedTask) {
                     this.localArray = newSelectedTask.idTask;
                 }
             }
+        },
+        refresh() {
+            if (this.refresh) {
+                this.fetchTask();
+            }
         }
 
     },
-    async mounted() {
-        await this.fetchTask();
+    mounted() {
+        this.fetchTask();
+
     },
     created() {
+        console.log(store)
         this.fetchTask();
-        // Escuchar el evento 'task-added' y llamar a handleTaskAdded cuando se emite
         this.$root.$on('task-added', this.handleTaskAdded);
     },
 };

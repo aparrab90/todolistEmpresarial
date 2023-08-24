@@ -19,6 +19,9 @@
           <b-button type="submit" variant="success" class="m-2 w-100">Login</b-button>
         </div>
       </b-form>
+      <!-- <div class="text-end">
+        <small >Don't you have an account? Create Account</small>
+      </div> -->
     </b-container>
     <AvisoModal :aviso="aviso" />
 
@@ -29,24 +32,24 @@
 <script>
 import { login } from '@/services/api';
 import HeaderView from './general/HeaderView.vue';
-import { setAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
+import { setAuthData } from '@/services/auth';
 
 export default {
   components: {
-    HeaderView // Agregar el componente HeaderView
+    HeaderView
   },
   data() {
     return {
       identificationUser: '',
       passwordUser: '',
-      loginMessage: '', // Mensaje a mostrar debajo del formulario
-      showWelcomeModal: false, // Controla la visibilidad del modal de bienvenida
-      loggedInUserName: '',// Nombre de usuario para mostrar en el mensaje de bienvenida
+      loginMessage: '',
+      loggedInUserName: '',
       aviso: {
         titulo: '',
         texto: '',
-        type: 'success' // Puedes cambiar el tipo de aviso según tus necesidades
-      }
+        type: 'success'
+      },
+      isLogged: false
     };
   },
   computed: {
@@ -58,35 +61,47 @@ export default {
     async login() {
       try {
         const userData = await login(this.identificationUser, this.passwordUser);
-        console.log('Logged in:', userData);
-        
+
         if (userData.isSuccess && userData.result && userData.result.usuario) {
-          this.loggedInUserName = userData.result.usuario.nameUser; // Obtener el nombre del usuario
-          console.log('LOEGEADOOOO:', this.loggedInUserName);
-          
-          localStorage.setItem('token', userData.result.token); // Asegúrate de adaptar el nombre del campo
-          console.log('STORAGE:', userData.result.token);
+          this.loggedInUserName = userData.result.usuario.nameUser;
+
+          localStorage.setItem('token', userData.result.token);
+
           const loggedInUserName = userData.result.usuario.nameUser;
           const loggedIdUser = userData.result.usuario.idUser;
+
           setAuthData(userData.result.token, loggedInUserName, loggedIdUser);
-          // Redireccionar a la ruta UserDashboard
-          this.$router.push({ name: 'UserDashboard' });
-          // this.showWelcomeModal = true;
+          this.aviso.titulo = 'Welcome!';
+          this.aviso.texto = loggedInUserName;
+          this.aviso.type = 'success';
+
+          this.isLogged = true;
+          // this.$router.push({ name: 'UserDashboard' });
         } else {
-          // Manejo de respuestas con problemas
           console.error('Login error:', userData.errorMessages);
-          // Mostrar mensaje de error
           this.loginMessage = 'Login failed. Please check your credentials.';
         }
       } catch (error) {
-        // this.$router.push({ name: 'UserDashboard' });
-        // Manejo de errores de conexión o problemas en la solicitud
         console.error('Login error:', error);
-        // Mostrar mensaje de error
         this.loginMessage = 'An error occurred. Please try again later.';
       }
     },
+    toPageAfterNotification() {
+      if (this.isLogged) {
+        setTimeout(() => {
+          this.$router.push({ name: 'UserDashboard' });
+        }, 2000); // Espera 2 segundos (ajusta el valor según tus necesidades)
+      }
+    },
 
+  },
+  watch: {
+    aviso: {
+      handler() {
+        this.toPageAfterNotification();
+      },
+      deep: true
+    }
   }
 };
 </script>
