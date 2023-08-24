@@ -11,7 +11,9 @@ export const editStatusTaskStore = (state, taskId) => {
   // Mapear sobre la lista de tareas y encontrar la tarea con el mismo taskId
   state.todoList = state.todoList.map((task) => {
     if (task.idTask === taskId) {
-      task.statusTask = task.statusTask === '"true"' ? '"false"' : '"true"';
+      console.log("status actual", task.statusTask);
+      task.statusTask = task.statusTask === "true" ? "false" : "true";
+      console.log("status cambio a ", task.statusTask);
     }
     return task;
   });

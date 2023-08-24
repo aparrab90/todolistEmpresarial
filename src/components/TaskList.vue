@@ -24,7 +24,7 @@
                     <div class="col-12 d-flex justify-content-center align-items-center">
                         <div v-if="row.item.statusTask == 'false'" class="text-center">
                             <div class="form-check">
-                                <input class="form-check-input form-check-input-lg" type="checkbox"
+                                <input class="form-check-input form-check-input-lg" type="checkbox" variant="success"
                                     v-model="row.item.selected" style="transform: scale(2); border-radius: 5rem;"
                                     @change="handleCheckboxChange(row.item)">
                                 <label class="form-check-label"></label>
