@@ -1,7 +1,8 @@
 <template>
     <div>
         <h1>{{ refresh }}</h1>
-        <!-- {{ store.getters.getTaskStore }} -->
+        {{ menu }}
+        {{ menuPriority }}
         <!-- {{ getTaskStore }} -->
         <!-- {{ localArray }} -->
         <!-- SELECCIONADO {{ tasks[0] }} -->
@@ -28,12 +29,14 @@
                                     v-model="row.item.selected" style="transform: scale(2); border-radius: 5rem;"
                                     @change="handleCheckboxChange(row.item)">
                                 <label class="form-check-label"></label>
+                                <small>{{ reviewPriority }}</small>
                             </div>
                         </div>
                         <div v-else>
                             <div>
                                 <b-icon icon="check-circle-fill" class="text-success h2"
                                     @click="handleCheckboxChange(row.item)"></b-icon>
+                                <small>{{ reviewPriority }}</small>
                             </div>
                         </div>
                     </div>
@@ -70,7 +73,7 @@
 </template>
   
 <script>
-import { getTasks, editStatusTask, editTaskPriority } from '@/services/api';
+import { getTasks, editStatusTask, editTaskPriority, getTasksPriority, getTasksTodo } from '@/services/api';
 import { getAuthData } from '@/services/auth';
 import moment from 'moment';
 import { store } from "../store/index";
@@ -109,6 +112,8 @@ export default {
             menuLocal: this.menu,
             localArray: [],
             taskListStyle: '',
+            reviewPriority: false,
+            menuPriority: ''
         };
     },
     computed: {
@@ -137,7 +142,7 @@ export default {
 
             let filteredTasks = [...original]; // Copia del array original
 
-            if (this.menuLocal === 'Today') {
+            if (this.menuLocal === 'Todo') {
                 filteredTasks = filteredTasks.filter(task => (task.statusTask === 'false'));
                 this.taskListStyle = 'height: 40vh; overflow-y: scroll;';
             }
@@ -145,11 +150,14 @@ export default {
                 filteredTasks = original.filter(task => task.priorityTask === 'true');
                 this.taskListStyle = 'height: 70vh; overflow-y: scroll;';
             }
-
-
-
             this.tasks = filteredTasks;
             console.log("TODOS", this.tasks)
+        },
+        async fetchTaskImportant() {
+            await getTasksPriority(this.$store, this.idUser);
+        },
+        async fetchTaskTodo() {
+            await getTasksTodo(this.$store, this.idUser);
         },
         async updatePriorityTask(dataTask) {
             try {
@@ -169,6 +177,8 @@ export default {
         },
         handleCheckboxChange(item) {
             console.log("Checkbox cambiado para:", item);
+            this.reviewPriority = true;
+
             this.updateStatusTask(item);
         },
         async updateStatusTask(dataTask) {
@@ -203,7 +213,18 @@ export default {
         },
         menu(newMenuValue) {
             this.menuLocal = newMenuValue;
-            this.fetchTask();
+
+            if (this.menuLocal == 'Important') {
+                this.fetchTaskImportant();
+            }
+
+            if (this.menuLocal == 'Todo') {
+                this.fetchTaskTodo();
+            }
+            if (this.menuLocal == 'All Tasks') {
+                this.fetchTask();
+            }
+
 
         },
         selectedTask: {
@@ -215,18 +236,27 @@ export default {
         },
         refresh() {
             if (this.refresh) {
-                this.fetchTask();
+                this.fetchTaskTodo();
+            }
+        },
+        reviewPriority: {
+
+            handler(review) {
+
+                this.menuPriority = this.menuLocal;
+                console.log(review)
+
             }
         }
 
     },
     mounted() {
-        this.fetchTask();
+        // this.fetchTask();
 
     },
     created() {
         console.log(store)
-        this.fetchTask();
+        this.fetchTaskTodo();
         this.$root.$on('task-added', this.handleTaskAdded);
     },
 };

@@ -71,6 +71,60 @@ export const getTasks = async (store, userId) => {
     return [];
   }
 };
+export const getTasksTodo = async (store, userId) => {
+  try {
+    const { token } = getAuthData();
+
+    const response = await apiClient.get(`/api/Tasks/GetTasksUser/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const mappedTasks = response.data
+      .map((task) => ({
+        ...task,
+        statusTask: task.statusTask === "0" ? "false" : task.statusTask,
+      }))
+      .filter((task) => task.statusTask === "false"); // Filtrar tareas con statusTask igual a "false"
+
+    // Agregar las tareas al store utilizando la mutación
+    console.log("tooodo", mappedTasks);
+    store.commit("todoModule/addAllTaskStore", mappedTasks);
+
+    return mappedTasks;
+  } catch (error) {
+    console.error("SALIDA ERROR", error.message);
+    return [];
+  }
+};
+export const getTasksPriority = async (store, userId) => {
+  try {
+    const { token } = getAuthData();
+
+    const response = await apiClient.get(
+      `/api/Tasks/GetHightPriorityTaskUser/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const mappedTasks = response.data.map((task) => ({
+      ...task,
+      statusTask: task.statusTask === "0" ? "false" : task.statusTask,
+    }));
+
+    // Agregar las tareas al store utilizando la mutación
+    store.commit("todoModule/addAllTaskStore", response.data);
+
+    return mappedTasks;
+  } catch (error) {
+    console.error("SALIDA ERROR", error.message);
+    return [];
+  }
+};
 
 export const editStatusTask = async (store, taskId, newPriority) => {
   // console.log("recibe", taskId, newPriority);

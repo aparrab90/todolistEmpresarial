@@ -8,7 +8,7 @@
         <MenuView :items="navigationItems" @selectItem="handleNavigation" class="col bg-light mt-2" />
 
         <div :class="['col-lg-7', !selectedTask ? 'col-lg-10' : 'col-lg-7']">
-          <div v-show="activeNavItem === 'Today'">
+          <div v-show="activeNavItem === 'Todo'">
             <TaskForm @show-task-detail="handleShowTaskDetail" @task-added="handleTaskAdded" @update-task="actualizar" />
             <b-card class="mt-1">
               <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask"
@@ -64,11 +64,11 @@ export default {
   data() {
     return {
       navigationItems: [
-        { id: 1, name: 'Today', icon: 'book', color: 'success' },
+        { id: 1, name: 'Todo', icon: 'book', color: 'success' },
         { id: 2, name: 'Important', icon: 'exclamation-circle', color: 'warning' },
         { id: 3, name: 'All Tasks', icon: 'list-ul', color: 'secondary' }
       ],
-      activeNavItem: 'Today',
+      activeNavItem: 'Todo',
       showTaskDetail: false,
       selectedTask: null,
       tasks: [], // Agrega esta propiedad para almacenar las tareas

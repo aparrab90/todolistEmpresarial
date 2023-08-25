@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      selectedMenuItem: 'Today' // Variable para almacenar el elemento seleccionado
+      selectedMenuItem: 'Todo' // Variable para almacenar el elemento seleccionado
     };
   },
   methods: {

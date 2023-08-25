@@ -9,7 +9,7 @@
         <MenuView :items="navigationItems" class="col bg-light mt-2" />
 
         <div class="col-lg-8">
-          <!-- Mostrar el componente TaskForm solo si la opción "Today" está activa -->
+          <!-- Mostrar el componente TaskForm solo si la opción "Todo" está activa -->
           <!-- <RegisterUser /> -->
           <UsersList />
         </div>
@@ -42,7 +42,7 @@ export default {
     return {
       // Array con objetos que contienen las propiedades id, name y to
       navigationItems: [
-        // { id: 1, name: 'Today', to: '/admin', icon: 'house-door' },
+        // { id: 1, name: 'Todo', to: '/admin', icon: 'house-door' },
         { id: 2, name: 'All Users', to: '/all-users', icon: 'list-ul' }
       ]
     };
