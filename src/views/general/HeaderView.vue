@@ -15,9 +15,9 @@
 
                 <h4 class="text-center mx-auto">TodoList Five!</h4>
 
-                <span v-if="isAuthenticated">{{ idUser }} Welcome, {{ nameUser }}</span>
+                <span v-if="isAuthenticated"><small class="text-muted"> Welcome,</small> {{ nameUser }}</span>
                 <span v-else></span>
-                
+
             </b-navbar-brand>
         </b-navbar>
     </div>

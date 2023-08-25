@@ -8,7 +8,7 @@
             </span>
         </div>
         <b-table :fields="filteredFields" :items="getTaskStore" responsive head-variant="light" class="table table-sm"
-            :style="taskListStyle">
+           >
 
 
             <template #cell(priorityTask)="row">
