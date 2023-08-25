@@ -6,7 +6,6 @@
         :style="{ 'background-color': selectedMenuItem === item.name ? 'whitesmoke' : '' }">
         <b-icon :icon="item.icon" :variant="item.color" class="mr-2" />
         <span class="mr-3">
-
           {{ item.name }}
         </span>
       </b-nav-item>

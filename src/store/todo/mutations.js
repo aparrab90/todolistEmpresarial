@@ -18,3 +18,16 @@ export const editStatusTaskStore = (state, taskId) => {
     return task;
   });
 };
+export const editPriorityTaskStore = (state, taskId) => {
+  console.log("edittttt", taskId);
+
+  // Mapear sobre la lista de tareas y encontrar la tarea con el mismo taskId
+  state.todoList = state.todoList.map((task) => {
+    if (task.idTask === taskId) {
+      console.log("status actual", task.priorityTask);
+      task.priorityTask = task.priorityTask === "true" ? "false" : "true";
+      console.log("status cambio a ", task.priorityTask);
+    }
+    return task;
+  });
+};

@@ -1,11 +1,12 @@
 <template>
     <div>
-        <h1>{{ refresh }}</h1>
         {{ menu }}
-        {{ menuPriority }}
-        <!-- {{ getTaskStore }} -->
-        <!-- {{ localArray }} -->
-        <!-- SELECCIONADO {{ tasks[0] }} -->
+        <div class="text-end">
+
+            <span class="b text-primary font-weight-bold  rounded-circle h4">
+                <small class="text-secondary">Tasks</small> | <span> {{ taskCount }}</span>
+            </span>
+        </div>
         <b-table :fields="filteredFields" :items="getTaskStore" responsive head-variant="light" class="table table-sm"
             :style="taskListStyle">
 
@@ -29,14 +30,14 @@
                                     v-model="row.item.selected" style="transform: scale(2); border-radius: 5rem;"
                                     @change="handleCheckboxChange(row.item)">
                                 <label class="form-check-label"></label>
-                                <small>{{ reviewPriority }}</small>
+                                <!-- <small>{{ reviewPriority }}</small> -->
                             </div>
                         </div>
                         <div v-else>
                             <div>
                                 <b-icon icon="check-circle-fill" class="text-success h2"
                                     @click="handleCheckboxChange(row.item)"></b-icon>
-                                <small>{{ reviewPriority }}</small>
+                                <!-- <small>{{ reviewPriority }}</small> -->
                             </div>
                         </div>
                     </div>
@@ -128,6 +129,9 @@ export default {
             const authData = getAuthData();
             return authData.idUser;
         },
+        taskCount() {
+            return this.getTaskStore.length;
+        },
 
     },
     methods: {
@@ -138,19 +142,10 @@ export default {
             this.editTask(task);
         },
         async fetchTask() {
-            const original = await getTasks(this.$store, this.idUser);
+            await getTasks(this.$store, this.idUser);
 
-            let filteredTasks = [...original]; // Copia del array original
 
-            if (this.menuLocal === 'Todo') {
-                filteredTasks = filteredTasks.filter(task => (task.statusTask === 'false'));
-                this.taskListStyle = 'height: 40vh; overflow-y: scroll;';
-            }
-            if (this.menuLocal === 'Important') {
-                filteredTasks = original.filter(task => task.priorityTask === 'true');
-                this.taskListStyle = 'height: 70vh; overflow-y: scroll;';
-            }
-            this.tasks = filteredTasks;
+
             console.log("TODOS", this.tasks)
         },
         async fetchTaskImportant() {
@@ -161,10 +156,9 @@ export default {
         },
         async updatePriorityTask(dataTask) {
             try {
-                const oppositePriority = dataTask.priorityTask === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
-                await editTaskPriority(dataTask.idTask, oppositePriority);
-                console.log('Task updated successfully');
-                this.fetchTask();
+                const oppositeStatus = dataTask.statusTask === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
+                const newTasks = await editTaskPriority(this.$store, dataTask.idTask, oppositeStatus);
+                this.tasks = newTasks; //this.fetchTask();
             } catch (error) {
                 console.error('Error updating task:', error);
             }
@@ -213,6 +207,7 @@ export default {
         },
         menu(newMenuValue) {
             this.menuLocal = newMenuValue;
+            this.taskListStyle = this.taskCount < 5 ? 'height: 300px; overflow-y: scroll;' : 'height: 700px; overflow-y: scroll;';
 
             if (this.menuLocal == 'Important') {
                 this.fetchTaskImportant();
@@ -241,11 +236,20 @@ export default {
         },
         reviewPriority: {
 
-            handler(review) {
+            handler() {
 
                 this.menuPriority = this.menuLocal;
-                console.log(review)
+                console.log(this.menuLocal)
+                // if (this.menuLocal == 'Important') {
+                //     this.fetchTaskImportant();
+                // }
 
+                // if (this.menuLocal == 'Todo') {
+                //     this.fetchTaskTodo();
+                // }
+                // if (this.menuLocal == 'All Tasks') {
+                //     this.fetchTask();
+                // }
             }
         }
 
@@ -257,7 +261,7 @@ export default {
     created() {
         console.log(store)
         this.fetchTaskTodo();
-        this.$root.$on('task-added', this.handleTaskAdded);
+        // this.$root.$on('task-added', this.handleTaskAdded);
     },
 };
 </script>

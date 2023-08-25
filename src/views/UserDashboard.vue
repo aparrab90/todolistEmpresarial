@@ -20,7 +20,6 @@
             <b-card class="mt-3">
               <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask"
                 :refresh="refresh" />
-              <!-- <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" /> -->
             </b-card>
           </div>
           <div v-show="activeNavItem === 'All Tasks'">

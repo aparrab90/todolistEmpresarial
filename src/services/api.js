@@ -101,25 +101,24 @@ export const getTasksTodo = async (store, userId) => {
 export const getTasksPriority = async (store, userId) => {
   try {
     const { token } = getAuthData();
-
-    const response = await apiClient.get(
-      `/api/Tasks/GetHightPriorityTaskUser/${userId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
+  
+    const response = await apiClient.get(`/api/Tasks/GetTasksUser/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
     const mappedTasks = response.data.map((task) => ({
       ...task,
       statusTask: task.statusTask === "0" ? "false" : task.statusTask,
     }));
-
-    // Agregar las tareas al store utilizando la mutación
-    store.commit("todoModule/addAllTaskStore", response.data);
-
-    return mappedTasks;
+  
+    const filteredTasks = mappedTasks.filter((task) => task.priorityTask === "true");
+  
+    // Agregar las tareas filtradas al store utilizando la mutación
+    store.commit("todoModule/addAllTaskStore", filteredTasks);
+  
+    return filteredTasks;
   } catch (error) {
     console.error("SALIDA ERROR", error.message);
     return [];
@@ -143,6 +142,33 @@ export const editStatusTask = async (store, taskId, newPriority) => {
     );
 
     store.commit("todoModule/editStatusTaskStore", taskId);
+    console.log(
+      "Respuesta de API al editar prioridad de tarea:",
+      response.data
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al editar prioridad de tarea:", error.message);
+    throw error;
+  }
+};
+export const editTaskPriority = async (store, taskId, newPriority) => {
+  // console.log("recibe", taskId, newPriority);
+  try {
+    const { token } = getAuthData();
+
+    const response = await apiClient.put(
+      `/api/Tasks/editPriorityTask/${taskId}`,
+      newPriority,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    store.commit("todoModule/editPriorityTaskStore", taskId);
     console.log(
       "Respuesta de API al editar prioridad de tarea:",
       response.data
@@ -223,33 +249,6 @@ export const getUsers = async () => {
 };
 
 //GETTASKS IDUSER
-
-export const editTaskPriority = async (taskId, newPriority) => {
-  console.log("recibe", taskId, newPriority);
-  try {
-    const { token } = getAuthData();
-
-    const response = await apiClient.put(
-      `/api/Tasks/editPriorityTask/${taskId}`,
-      newPriority,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    console.log(
-      "Respuesta de API al editar prioridad de tarea:",
-      response.data
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error al editar prioridad de tarea:", error.message);
-    throw error;
-  }
-};
 
 export default {
   login,
