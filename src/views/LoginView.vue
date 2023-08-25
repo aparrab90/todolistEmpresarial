@@ -8,7 +8,7 @@
       </div>
       <b-form @submit.prevent="login">
         <b-form-group label-for="username-input">
-          <b-form-input v-model="identificationUser" id="username-input" placeholder="Username" required
+          <b-form-input v-model="identificationUser" id="username-input" placeholder="Identification"  type="number"  required
             class="m-2"></b-form-input>
         </b-form-group>
         <b-form-group>
@@ -83,7 +83,7 @@ export default {
         }
       } catch (error) {
         console.error('Login error:', error);
-        this.loginMessage = 'An error occurred. Please try again later.';
+        this.loginMessage = 'You are not a registered user yet.';
       }
     },
     toPageAfterNotification() {
