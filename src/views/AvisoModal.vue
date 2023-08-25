@@ -21,7 +21,7 @@
           title: aviso.titulo,
           text: aviso.texto,
           icon: aviso.type,
-          timer: aviso.duracion || 3000,
+          timer: aviso.duracion || 2500,
           timerProgressBar: true,
           toast: true,
           position: 'top-end',

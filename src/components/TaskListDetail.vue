@@ -10,11 +10,10 @@
           </svg>
         </b-col>
         <b-col lg="">
-          <!-- <h4>Edit Task</h4> -->
         </b-col>
-        <b-col lg="5">
+
+        <b-col lg="6">
           <div class="m-1">
-            <!-- {{ selectedGroup }} -->
             <b-form-group id="groupSelectGroup" class="sm ">
               <b-form-select v-model="localTask.idCategory" :options="groupOptions"
                 class="form-select form-control"></b-form-select>
@@ -22,16 +21,8 @@
           </div>
         </b-col>
       </b-row>
-      <!-- {{ localTask }} -->
-      {{ localTask.idTask }}
-
-      <!-- {{ selectedTask }} -->
-      <!-- <b-form-group label="ID">
-        <b-form-input v-model="localTask.idTask" disabled />
-      </b-form-group> -->
       <b-row>
         <b-col lg="12">
-          <!-- <small>{{ localTask }}</small> -->
           <div class="m-1">
 
             <b-form-group>
@@ -51,64 +42,30 @@
         <b-col lg="">
           <div class="m-1">
             Limit
-            <!-- {{ selectedLimitDate }} -->
             <b-form-group id="limitTaskGroup">
               <b-form-datepicker v-model="selectedLimitDate" @input="updateSelectedDate(selectedLimitDate)"
                 :min="currentDate" required placeholder="Limit Task" class="small-datepicker" />
             </b-form-group>
           </div>
         </b-col>
-        <b-col lg="12">
-          <div class="text-end m-1 bg-light">
-            <b-button @click="updateTaskGeneral" variant="success" title="Save">
-              <b-icon icon="save" ></b-icon>
-            </b-button>
-          </div>
-        </b-col>
+
       </b-row>
+      <hr>
       <b-row class="text-left">
         <b-col>
           <h4>Steps</h4>
         </b-col>
       </b-row>
-
-      <!-- <b-row class="text-left"> -->
-      <!-- <b-col lg="10">
-          <b-form-group>
-            <b-form-input v-model="localSteps.nameStepTask" placeholder="Name Step" />
-          </b-form-group>
-        </b-col>
-        <b-col>
-          <div class="text-end">
-            <b-button @click="addStepTask" variant="secondary">+</b-button>
-          </div>
-        </b-col>
-      </b-row> -->
-
-
-      <!-- {{ localSteps }} -->
       <b-row v-for="(step, index) in getStepTaskStore" :key="'step_' + index" class="m-1">
-        <!-- {{ step }} -->
-        <!-- <b-col>
-          <div class="text-end">
-            <b-button @click="addStep" variant="warning">/</b-button>
-          </div> 
-
-        </b-col> -->
         <div class="col d-flex justify-content-center align-items-center">
           <div v-if="step.statusStepTask == 'false'" class="text-center">
-            <!-- <div class="form-check">
-              <input class="form-check-input text- " type="" variant="primary"
-                v-model="step.statusStepTask" style="transform: scale(2); border-radius: 2rem;"
-                @change="handleCheckboxChange(step)">
-              </div> -->
             <b-icon icon="circle-fill" class="text-white h2 border rounded-circle border-gray-3"
               @click="handleCheckboxChange(step)"></b-icon>
           </div>
           <div v-else>
             <div>
               <b-icon icon="check-circle-fill" class="text-success h2" @click="handleCheckboxChange(step)"></b-icon>
-              <!-- <small>{{ reviewPriority }}</small> -->
+
             </div>
           </div>
         </div>
@@ -118,8 +75,6 @@
           </b-form-group>
         </b-col>
       </b-row>
-
-      <!-- Iteración sobre localSteps -->
       <b-row v-for="(step, index) in localSteps" :key="'localStep_' + index" class="m-1">
         <b-col lg="9">
           <b-form-group>
@@ -132,34 +87,13 @@
           </div>
         </b-col>
       </b-row>
-      <!-- {{ localSteps }} -->
-      <!-- <b-row>
-        <b-col lg="10">
-          <b-form-group>
-            <b-form-input v-model="newStep" placeholder="Name Step" />
-          </b-form-group>
-        </b-col>
-        <b-col>
-          <div class="text-end">
-            <b-button @click="addStep" variant="secondary">+</b-button>
-          </div>
-        </b-col>
-      </b-row> -->
 
 
-
-      <!-- <b-form-group label="Detail Step">
-        <b-form-input v-model="localSteps.detailStepTask" placeholder="Detail Step" />
-      </b-form-group> -->
-
-      <!-- {{ localStepsTask }} -->
-      <!-- {{ getStepTaskStore }} -->
-
-      <!-- <template #footer>
+      <template #footer>
         <div class="text-end">
           <b-button @click="updateTaskGeneral" variant="success">Save</b-button>
         </div>
-      </template> -->
+      </template>
     </b-card>
   </div>
 </template>
@@ -240,7 +174,6 @@ export default {
       }
     },
     async addStepTask(step) {
-      console.log("addStep", step)
       try {
         await addStepTask(this.$store, step);
       } catch (error) {
@@ -258,7 +191,6 @@ export default {
       return this.localTask.priorityTask === "false" ? "lightgray" : "yellow";
     },
     updateSelectedDate(date) {
-      console.log("new valor limit", date)
       this.localTask.limitTask = date;
     },
 
@@ -268,13 +200,11 @@ export default {
       this.localSteps[0].nameStepTask = ""
     },
     handleCheckboxChange(item) {
-      console.log("Checkbox cambiado para:", item);
       this.reviewPriority = true;
 
       this.updateStatusTask(item);
     },
     async updateStatusTask(dataTask) {
-      console.log("new priority", dataTask)
       try {
         const oppositeStatus = dataTask.statusStepTask === '"true"' ? '"false"' : '"true"';
         const newTasks = await editStepStatusTask(this.$store, dataTask.idStepTask, oppositeStatus);

@@ -1,9 +1,7 @@
 <template>
     <div id="app">
-        <!-- Header -->
         <HeaderView />
         <br>
-        <!-- Body -->
         <div class="container-fluid d-flex flex-column pt-4" style="height: 90vh;">
             <div class="row flex-grow-1">
                 <div class="col-lg-9 bg-white d-flex justify-content-center align-items-center">
@@ -14,19 +12,14 @@
                                 <img src="./../assets/inicio.png" alt="" style="width: 25vw">
                             </div>
                             <h1>¡One simple to do list for you!</h1>
-                            <!-- <SliderHome /> -->
                         </div>
                         <div class="col-12">
 
-                            <!-- <b-button variant="primary">Empezar</b-button> -->
                         </div>
                     </div>
                 </div>
 
                 <div class="row col-lg-3 p-3 ">
-                    <!-- <div class="col-12 text-center">
-                        <img src="./../assets/login.png" alt="" width="150">
-                    </div> -->
                     <div class="col-12 tabs-height mt-4 border-left border border-light bg-white">
                         <br>
                         <b-tabs align="end" content-class="tabs-end">
@@ -38,12 +31,11 @@
                             </b-tab>
                         </b-tabs>
                     </div>
+                    
 
                 </div>
             </div>
         </div>
-        <!-- <img src="../assets/footerDesign.png" alt="" > -->
-        <!-- Footer -->
         <FooterView class="fixed-bottom bg-primary text-light"></FooterView>
 
     </div>

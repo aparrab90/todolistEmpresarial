@@ -49,7 +49,7 @@ export default {
       aviso: {
         titulo: '',
         texto: '',
-        type: 'success' // Puedes cambiar el tipo de aviso según tus necesidades
+        type: 'success' 
       },
       identificationError: '',
       isRegistered: false
@@ -59,9 +59,7 @@ export default {
   methods: {
     async register() {
       try {
-        console.log('data:', this.registrationData);
         const userData = await registerUser(this.registrationData);
-        console.log('Registered:', userData.isSuccess);
 
         if (userData.isSuccess) {
           this.aviso.titulo = '¡Registrado!';
@@ -74,7 +72,6 @@ export default {
           this.aviso.texto = 'Hubo un problema con el registro.';
           this.aviso.type = 'error';
         }
-        // Implementar lógica de redirección después del registro
       } catch (error) {
         this.vaciarCampos();
         this.aviso.titulo = 'Atención!';
@@ -99,7 +96,7 @@ export default {
       if (this.isRegistered) {
         setTimeout(() => {
           location.reload();
-        }, 3000); // Espera 2 segundos (ajusta el valor según tus necesidades)
+        }, 3000); 
       }
     }
   },

@@ -23,24 +23,22 @@ import { getUsers } from '@/services/api';
 export default {
     data() {
         return {
-            userList: [], // Aquí almacenaremos la lista de usuarios obtenida de la API
+            userList: [],
         };
     },
     created() {
-        // Llamar a la función para obtener la lista de usuarios cuando el componente se cree
         this.fetchUserList();
     },
     methods: {
         async fetchUserList() {
             try {
-                // Realizar la llamada a la API para obtener la lista de usuarios
                 const userList = await getUsers();
-                this.userList = userList; // Asignar la lista de usuarios a la propiedad userList
+                this.userList = userList;
             } catch (error) {
                 console.error('Error fetching user list:', error);
             }
         },
-        // Resto de tus métodos
+
     },
 };
 </script>

@@ -7,37 +7,28 @@ export const addAllTaskStore = (state, taskList) => {
 };
 export const addStepTaskStore = (state, dataList) => {
   state.stepList.push(dataList);
-  console.log("actuyaki");
 };
 export const getStepTasksStore = (state, stepList) => {
   state.stepList = [];
   state.stepList.push(...stepList);
-  console.log("todos los steps", state.stepList);
 };
 export const editStatusTaskStore = (state, taskId) => {
   state.todoList = state.todoList.map((task) => {
     if (task.idTask === taskId) {
-      console.log("status actual", task.statusTask);
       task.statusTask = task.statusTask === "true" ? "false" : "true";
-      console.log("status cambio a ", task.statusTask);
     }
     return task;
   });
 };
 export const editStepStatusTaskStore = (state, taskId) => {
   state.stepList = state.stepList.map((task) => {
-    console.log("MUT ID", taskId);
-    console.log("MUT DATOS", task);
-    console.log("MUT DATOS", task.idStepTask);
+   
     if (task.idStepTask === taskId) {
-      console.log("status actual", task.statusTask);
       task.statusStepTask = task.statusStepTask === "true" ? "false" : "true";
-      console.log("status cambio a ", task.statusTask);
     }
     return task;
   });
 
-  console.log("datos step actualizados", state.stepList)
 };
 export const editPriorityTaskStore = (state, taskId) => {
   state.todoList = state.todoList.map((task) => {

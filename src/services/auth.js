@@ -13,7 +13,6 @@ export const getAuthData = () => {
 };
 
 export const removeAuthData = () => {
-  console.log("remover", localStorage)
   localStorage.removeItem('token');
   localStorage.removeItem('nameUser');
   localStorage.removeItem('idUser');

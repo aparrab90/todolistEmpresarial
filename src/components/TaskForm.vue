@@ -1,7 +1,6 @@
 <template>
   <div class="mt-3">
     <b-card>
-      <!-- {{ idUser }} -->
       <b-form @submit.prevent="addTask">
         <b-row>
           <b-col>
@@ -44,9 +43,6 @@
                 </b-button-group>
               </b-form-group>
             </b-col>
-
-
-            {{ selectedGroup }}
 
             <b-col class="text-end">
               <b-button type="submit" variant="success" :disabled="isButtonDisabled">+</b-button>
@@ -94,15 +90,11 @@ export default {
       return authData.idUser;
     },
     currentDate() {
-      // Calcular la fecha actual utilizando moment.js
       return moment().format('YYYY-MM-DD');
     },
     isButtonDisabled() {
-      // Evaluar si los campos están vacíos
       return this.taskName === '' || this.taskDescription === '';
     },
-
-
   },
 
   methods: {
@@ -117,15 +109,18 @@ export default {
           idUser: this.idUser,
           idCategory: this.selectedGroup,
         };
-        // this.$emit('update-task', this.idUser);
 
         const updatedTasks = await addTask(this.$store, taskData);
         this.$emit('task-added', updatedTasks);
+        this.taskName = '';
+        this.taskDescription = '';
+        this.selectedLimitDate = moment().format('YYYY-MM-DD HH:mm:ss'); 
+        this.selectedGroup = 1; 
+
         this.aviso.titulo = 'New Task!';
         this.aviso.texto = taskData.nameTask;
         this.aviso.type = 'success';
 
-        console.log('Task added successfully', this.idUser);
       } catch (error) {
         console.error('Error adding task:', error);
       }
@@ -159,6 +154,5 @@ export default {
 
 .small-datepicker .datepicker-dropdown {
   font-size: 0.8rem;
-  /* Ajusta el tamaño de fuente según tus necesidades */
 }
 </style>

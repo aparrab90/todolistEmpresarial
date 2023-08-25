@@ -1,9 +1,9 @@
 import axios from "axios";
-import { getAuthData } from "./auth"; // Ajusta la ruta a tu ubicación
+import { getAuthData } from "./auth"; 
 import moment from "moment";
 
 const apiClient = axios.create({
-  baseURL: "http://40.88.211.242", //  API
+  baseURL: "http://40.88.211.242", 
 });
 
 export const login = async (identificationUser, passwordUser) => {
@@ -48,7 +48,6 @@ export const addTask = async (store, taskData) => {
 };
 
 export const addStepTask = async (store, taskData) => {
-  console.log("api addstep", taskData);
   try {
     const { token } = getAuthData();
 
@@ -109,9 +108,7 @@ export const getStepTasks = async (store, taskId) => {
         },
       }
     );
-    console.log("respuesa todos steps", response.data);
 
-    // Agregar las tareas al store utilizando la mutación
     store.commit("todoModule/getStepTasksStore", response.data);
 
     return response.data;
@@ -138,7 +135,6 @@ export const getTasksTodo = async (store, userId) => {
       .filter((task) => task.statusTask === "false"); // Filtrar tareas con statusTask igual a "false"
 
     // Agregar las tareas al store utilizando la mutación
-    console.log("tooodo", mappedTasks);
     store.commit("todoModule/addAllTaskStore", mappedTasks);
 
     return mappedTasks;
@@ -177,7 +173,6 @@ export const getTasksPriority = async (store, userId) => {
 };
 
 export const editStatusTask = async (store, taskId, newPriority) => {
-  // console.log("recibe", taskId, newPriority);
   try {
     const { token } = getAuthData();
 
@@ -193,10 +188,7 @@ export const editStatusTask = async (store, taskId, newPriority) => {
     );
 
     store.commit("todoModule/editStatusTaskStore", taskId);
-    console.log(
-      "Respuesta de API al editar prioridad de tarea:",
-      response.data
-    );
+    
     return response.data;
   } catch (error) {
     console.error("Error al editar prioridad de tarea:", error.message);
@@ -204,7 +196,6 @@ export const editStatusTask = async (store, taskId, newPriority) => {
   }
 };
 export const editStepStatusTask = async (store, taskId, newPriority) => {
-  // console.log("recibe", taskId, newPriority);
   try {
     const { token } = getAuthData();
 
@@ -220,10 +211,7 @@ export const editStepStatusTask = async (store, taskId, newPriority) => {
     );
 
     store.commit("todoModule/editStepStatusTaskStore", taskId);
-    console.log(
-      "Respuesta de API al editar prioridad de tarea:",
-      response.data
-    );
+    
     return response.data;
   } catch (error) {
     console.error("Error al editar prioridad de tarea:", error.message);
@@ -231,7 +219,7 @@ export const editStepStatusTask = async (store, taskId, newPriority) => {
   }
 };
 export const editTaskPriority = async (store, taskId, newPriority) => {
-  // console.log("recibe", taskId, newPriority);
+
   try {
     const { token } = getAuthData();
 
@@ -247,10 +235,7 @@ export const editTaskPriority = async (store, taskId, newPriority) => {
     );
 
     store.commit("todoModule/editPriorityTaskStore", taskId);
-    console.log(
-      "Respuesta de API al editar prioridad de tarea:",
-      response.data
-    );
+   
     return response.data;
   } catch (error) {
     console.error("Error al editar prioridad de tarea:", error.message);
@@ -291,7 +276,6 @@ export const createStepTask = async (idTask, stepTaskData) => {
       `/api/tasks/${idTask}/createStepTask`,
       stepTaskData
     );
-    console.log("Step task created successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error creating step task:", error);
@@ -305,7 +289,6 @@ export const editStatusStepTask = async (idStepTask, newStatus) => {
       `/api/stepTasks/${idStepTask}/editStatus`,
       { statusStepTask: newStatus }
     );
-    console.log("Status of Step Task updated successfully:", response.data);
 
     // store.commit("todoModule/TaskStore", response.data);
 

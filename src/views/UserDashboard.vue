@@ -13,7 +13,7 @@
             <b-card class="mt-1">
               <TaskList :tasks="tasks" @edit-task="handleEditTask" @edit-task-hidden="handleEditTaskHidden"
                 :menu="activeNavItem" :selectedTask="selectedTask" :refresh="refresh" />
-              {{ showTaskDetail }}
+              <!-- {{ showTaskDetail }} -->
             </b-card>
           </div>
           <div v-show="activeNavItem === 'Important'">

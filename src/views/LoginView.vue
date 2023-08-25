@@ -90,7 +90,7 @@ export default {
       if (this.isLogged) {
         setTimeout(() => {
           this.$router.push({ name: 'UserDashboard' });
-        }, 2000); // Espera 2 segundos (ajusta el valor según tus necesidades)
+        }, 2000); 
       }
     },
 

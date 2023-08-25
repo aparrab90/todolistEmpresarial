@@ -12,11 +12,21 @@
                         </svg> -->
                     </a>
                 </div>
-
                 <h4 class="text-center mx-auto">TodoList Five!</h4>
+                <div v-if="isAuthenticated">
+                    <b-row>
+                        <b-col class="mt-1">
+                            <span><small class="text-muted"> Welcome,</small> {{ nameUser }}</span>
+                        </b-col>
+                        <b-col>
 
-                <span v-if="isAuthenticated"><small class="text-muted"> Welcome,</small> {{ nameUser }}</span>
-                <span v-else></span>
+                            <div class="text-center">
+                                <img src="../../assets/login.png" alt="" width="30">
+                            </div>
+                        </b-col>
+                    </b-row>
+
+                </div>
 
             </b-navbar-brand>
         </b-navbar>

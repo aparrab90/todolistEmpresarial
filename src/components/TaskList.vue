@@ -82,7 +82,7 @@
 import { getTasks, editStatusTask, editTaskPriority, getTasksPriority, getTasksTodo } from '@/services/api';
 import { getAuthData } from '@/services/auth';
 import moment from 'moment';
-import { store } from "../store/index";
+// import { store } from "../store/index";
 import { mapGetters } from 'vuex';
 export default {
     name: 'TaskList',
@@ -152,7 +152,6 @@ export default {
             this.$emit('edit-task', idTask);
         },
         editTaskHidden() {
-            console.log("aqui")
             this.$emit('edit-task-hidden');
         },
         handleEditTask(task) {
@@ -160,10 +159,6 @@ export default {
         },
         async fetchTask() {
             await getTasks(this.$store, this.idUser);
-
-
-
-            console.log("TODOS", this.tasks)
         },
         async fetchTaskImportant() {
             await getTasksPriority(this.$store, this.idUser);
@@ -173,31 +168,28 @@ export default {
         },
         async updatePriorityTask(dataTask) {
             try {
-                const oppositeStatus = dataTask.statusTask === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
+                const oppositeStatus = dataTask.statusTask === "true" ? '"false"' : '"true"'; 
                 const newTasks = await editTaskPriority(this.$store, dataTask.idTask, oppositeStatus);
-                this.tasks = newTasks; //this.fetchTask();
+                this.tasks = newTasks; 
             } catch (error) {
                 console.error('Error updating task:', error);
             }
         },
         handleTaskAdded(userId) {
-            console.log("addddd", userId)
             if (userId === this.idUser) {
                 this.fetchTasks();
             }
         },
         handleCheckboxChange(item) {
-            console.log("Checkbox cambiado para:", item);
             this.reviewPriority = true;
 
             this.updateStatusTask(item);
         },
         async updateStatusTask(dataTask) {
-            console.log("new priority", dataTask)
             try {
-                const oppositeStatus = dataTask.statusTask === "true" ? '"false"' : '"true"'; // Nota las comillas dobles
+                const oppositeStatus = dataTask.statusTask === "true" ? '"false"' : '"true"'; 
                 const newTasks = await editStatusTask(this.$store, dataTask.idTask, oppositeStatus);
-                this.tasks = newTasks; //this.fetchTask();
+                this.tasks = newTasks; 
             } catch (error) {
                 console.error('Error updating task:', error);
             }
@@ -255,37 +247,18 @@ export default {
             }
         },
         reviewPriority: {
-
             handler() {
-
                 this.menuPriority = this.menuLocal;
-                console.log(this.menuLocal)
-                // if (this.menuLocal == 'Important') {
-                //     this.fetchTaskImportant();
-                // }
-
-                // if (this.menuLocal == 'Todo') {
-                //     this.fetchTaskTodo();
-                // }
-                // if (this.menuLocal == 'All Tasks') {
-                //     this.fetchTask();
-                // }
             }
         }
 
     },
-    mounted() {
-        // this.fetchTask();
-
-    },
+   
     created() {
-        console.log(store)
         this.fetchTaskTodo();
-        // this.$root.$on('task-added', this.handleTaskAdded);
     },
 };
 </script>
   
 <style scoped>
-/* Estilos específicos de TaskListTable.vue */
 </style>

@@ -20,7 +20,6 @@
       async registerUser() {
         try {
           await registerUser(this.fullNameUser, this.addressUser);
-          console.log('User registered successfully');
         } catch (error) {
           console.error('Error registering user:', error);
         }
