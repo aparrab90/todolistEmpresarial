@@ -24,6 +24,17 @@ export const editStatusTaskStore = (state, taskId) => {
     return task;
   });
 };
+export const editStepStatusTaskStore = (state, taskId) => {
+  console.log("nueva mut", state, taskId)
+  // state.todoList = state.todoList.map((task) => {
+  //   if (task.idTask === taskId) {
+  //     console.log("status actual", task.statusTask);
+  //     task.statusTask = task.statusTask === "true" ? "false" : "true";
+  //     console.log("status cambio a ", task.statusTask);
+  //   }
+  //   return task;
+  // });
+};
 export const editPriorityTaskStore = (state, taskId) => {
   state.todoList = state.todoList.map((task) => {
     if (task.idTask === taskId) {

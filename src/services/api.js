@@ -203,6 +203,33 @@ export const editStatusTask = async (store, taskId, newPriority) => {
     throw error;
   }
 };
+export const editStepStatusTask = async (store, taskId, newPriority) => {
+  // console.log("recibe", taskId, newPriority);
+  try {
+    const { token } = getAuthData();
+
+    const response = await apiClient.put(
+      `/api/StepTasks/editStatusStepTask/${taskId}`,
+      newPriority,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    store.commit("todoModule/editStatusTaskStore", taskId);
+    console.log(
+      "Respuesta de API al editar prioridad de tarea:",
+      response.data
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al editar prioridad de tarea:", error.message);
+    throw error;
+  }
+};
 export const editTaskPriority = async (store, taskId, newPriority) => {
   // console.log("recibe", taskId, newPriority);
   try {

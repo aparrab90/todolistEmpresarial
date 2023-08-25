@@ -23,7 +23,7 @@
         </b-col>
       </b-row>
       <!-- {{ localTask }} -->
-      <!-- {{ localTask.idTask }} -->
+      {{ localTask.idTask }}
 
       <!-- {{ selectedTask }} -->
       <!-- <b-form-group label="ID">
@@ -81,15 +81,33 @@
 
       <!-- {{ localSteps }} -->
       <b-row v-for="(step, index) in getStepTaskStore" :key="'step_' + index" class="m-1">
-        <b-col lg="9">
-          <b-form-group>
-            <b-form-input v-model="step.nameStepTask" :title="index" />
-          </b-form-group>
-        </b-col>
-        <b-col>
+        <!-- {{ step }} -->
+        <!-- <b-col>
           <div class="text-end">
             <b-button @click="addStep" variant="warning">/</b-button>
+          </div> 
+
+        </b-col> -->
+        <div class="col d-flex justify-content-center align-items-center">
+          <div v-if="step.statusStepTask== 'false'" class="text-center">
+            <!-- <div class="form-check">
+              <input class="form-check-input text- " type="" variant="primary"
+                v-model="step.statusStepTask" style="transform: scale(2); border-radius: 2rem;"
+                @change="handleCheckboxChange(step)">
+              </div> -->
+              <b-icon icon="circle-fill" class="text-white h2 border rounded-circle border-gray-3"  @click="handleCheckboxChange(step)"></b-icon>
           </div>
+          <div v-else>
+            <div>
+              <b-icon icon="check-circle-fill" class="text-success h2" @click="handleCheckboxChange(step)"></b-icon>
+              <!-- <small>{{ reviewPriority }}</small> -->
+            </div>
+          </div>
+        </div>
+        <b-col lg="9">
+          <b-form-group>
+            <b-form-input v-model="step.nameStepTask" />
+          </b-form-group>
         </b-col>
       </b-row>
 
@@ -106,7 +124,7 @@
           </div>
         </b-col>
       </b-row>
-      {{ localSteps }}
+      <!-- {{ localSteps }} -->
       <!-- <b-row>
         <b-col lg="10">
           <b-form-group>
@@ -140,7 +158,7 @@
   
 <script>
 import { getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
-import { editTask, addStepTask, getStepTasks } from '@/services/api';
+import { editTask, addStepTask, getStepTasks, editStepStatusTask} from '@/services/api';
 import moment from 'moment';
 import { mapGetters } from 'vuex';
 export default {
@@ -240,6 +258,22 @@ export default {
       this.newStep = ''; // Limpiar el campo después de agregar
       this.addStepTask(this.localSteps[0]);
       this.localSteps[0].nameStepTask = ""
+    },
+    handleCheckboxChange(item) {
+      console.log("Checkbox cambiado para:", item);
+      this.reviewPriority = true;
+
+      this.updateStatusTask(item);
+    },
+    async updateStatusTask(dataTask) {
+      console.log("new priority", dataTask)
+      try {
+        const oppositeStatus = dataTask.statusStepTask === '"true"' ? '"false"' : '"true"'; 
+        const newTasks = await editStepStatusTask(this.$store, dataTask.idStepTask, oppositeStatus);
+        this.tasks = newTasks; //this.fetchTask();
+      } catch (error) {
+        console.error('Error updating task:', error);
+      }
     },
   },
 };
