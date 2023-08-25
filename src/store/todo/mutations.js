@@ -2,13 +2,19 @@ export const addTaskStore = (state, dataList) => {
   state.todoList.push(dataList);
 };
 export const addAllTaskStore = (state, taskList) => {
-  state.todoList = [];
-  state.todoList.push(...taskList);
+  state.todoList = []; 
+  state.todoList.push(...taskList); 
+};
+export const addStepTaskStore = (state, dataList) => {
+  state.stepList.push(dataList);
+  console.log("actuyaki");
+};
+export const getStepTasksStore = (state, stepList) => {
+  state.stepList = [];
+  state.stepList.push(...stepList);
+  console.log("todos los steps", state.stepList);
 };
 export const editStatusTaskStore = (state, taskId) => {
-  console.log("edittttt", taskId);
-
-  // Mapear sobre la lista de tareas y encontrar la tarea con el mismo taskId
   state.todoList = state.todoList.map((task) => {
     if (task.idTask === taskId) {
       console.log("status actual", task.statusTask);
@@ -19,14 +25,9 @@ export const editStatusTaskStore = (state, taskId) => {
   });
 };
 export const editPriorityTaskStore = (state, taskId) => {
-  console.log("edittttt", taskId);
-
-  // Mapear sobre la lista de tareas y encontrar la tarea con el mismo taskId
   state.todoList = state.todoList.map((task) => {
     if (task.idTask === taskId) {
-      console.log("status actual", task.priorityTask);
       task.priorityTask = task.priorityTask === "true" ? "false" : "true";
-      console.log("status cambio a ", task.priorityTask);
     }
     return task;
   });
@@ -34,10 +35,8 @@ export const editPriorityTaskStore = (state, taskId) => {
 export const editTaskStore = (state, updatedTaskData) => {
   const taskIdToUpdate = updatedTaskData.idTask;
 
-  // Buscar la tarea en el estado y actualizar sus campos
   state.todoList = state.todoList.map((task) => {
     if (task.idTask === taskIdToUpdate) {
-      // Actualizar los campos relevantes
       task.nameTask = updatedTaskData.nameTask;
       task.detailTask = updatedTaskData.detailTask;
       task.statusTask = updatedTaskData.statusTask;

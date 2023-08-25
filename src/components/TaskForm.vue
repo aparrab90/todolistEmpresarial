@@ -1,6 +1,7 @@
 <template>
   <div class="mt-3">
     <b-card>
+      <!-- {{ idUser }} -->
       <b-form @submit.prevent="addTask">
         <b-row>
           <b-col>
@@ -45,7 +46,7 @@
             </b-col>
 
 
-            <!-- {{ selectedGroup }} -->
+            {{ selectedGroup }}
 
             <b-col class="text-end">
               <b-button type="submit" variant="success" :disabled="isButtonDisabled">+</b-button>

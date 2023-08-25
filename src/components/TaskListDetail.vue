@@ -23,6 +23,9 @@
         </b-col>
       </b-row>
       <!-- {{ localTask }} -->
+      <!-- {{ localTask.idTask }} -->
+
+      <!-- {{ selectedTask }} -->
       <!-- <b-form-group label="ID">
         <b-form-input v-model="localTask.idTask" disabled />
       </b-form-group> -->
@@ -61,13 +64,70 @@
           <h4>Steps</h4>
         </b-col>
       </b-row>
-      <b-form-group label="Name Step">
-        <b-form-input v-model="localSteps.nameStepTask" placeholder="Name Step" />
-      </b-form-group>
 
-      <b-form-group label="Detail Step">
+      <!-- <b-row class="text-left"> -->
+      <!-- <b-col lg="10">
+          <b-form-group>
+            <b-form-input v-model="localSteps.nameStepTask" placeholder="Name Step" />
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <div class="text-end">
+            <b-button @click="addStepTask" variant="secondary">+</b-button>
+          </div>
+        </b-col>
+      </b-row> -->
+
+
+      <!-- {{ localSteps }} -->
+      <b-row v-for="(step, index) in getStepTaskStore" :key="'step_' + index" class="m-1">
+        <b-col lg="9">
+          <b-form-group>
+            <b-form-input v-model="step.nameStepTask" :title="index" />
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <div class="text-end">
+            <b-button @click="addStep" variant="warning">/</b-button>
+          </div>
+        </b-col>
+      </b-row>
+
+      <!-- Iteración sobre localSteps -->
+      <b-row v-for="(step, index) in localSteps" :key="'localStep_' + index" class="m-1">
+        <b-col lg="9">
+          <b-form-group>
+            <b-form-input v-model="step.nameStepTask" :placeholder="'Name Step'" />
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <div class="text-end">
+            <b-button v-if="index === localSteps.length - 1" @click="addStep" variant="secondary">+</b-button>
+          </div>
+        </b-col>
+      </b-row>
+      {{ localSteps }}
+      <!-- <b-row>
+        <b-col lg="10">
+          <b-form-group>
+            <b-form-input v-model="newStep" placeholder="Name Step" />
+          </b-form-group>
+        </b-col>
+        <b-col>
+          <div class="text-end">
+            <b-button @click="addStep" variant="secondary">+</b-button>
+          </div>
+        </b-col>
+      </b-row> -->
+
+
+
+      <!-- <b-form-group label="Detail Step">
         <b-form-input v-model="localSteps.detailStepTask" placeholder="Detail Step" />
-      </b-form-group>
+      </b-form-group> -->
+
+      <!-- {{ localStepsTask }} -->
+      <!-- {{ getStepTaskStore }} -->
 
       <template #footer>
         <div class="text-end">
@@ -80,8 +140,9 @@
   
 <script>
 import { getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
-import { editTask } from '@/services/api';
+import { editTask, addStepTask, getStepTasks } from '@/services/api';
 import moment from 'moment';
+import { mapGetters } from 'vuex';
 export default {
   props: {
     selectedTask: Object // The selected task object to display details
@@ -89,14 +150,15 @@ export default {
   data() {
     return {
       localTask: { ...this.selectedTask },
-      localSteps:
-      {
-        nameStepTask: '',
-        detailStepTask: '',
-        statusStepTask: false,
-
-        idTask: ''
-      },
+      localSteps: [
+        {
+          nameStepTask: '',
+          detailStepTask: 'ssssssssssssssssss',
+          statusStepTask: "false",
+          updateStepTask: "2023-08-25T05:31:12.392Z",
+          idTask: '',
+        },
+      ],
       groupOptions: [
         { value: 1, text: 'Personal' },
         { value: 2, text: 'Estudio' },
@@ -105,11 +167,13 @@ export default {
         { value: 5, text: 'Investigación' },
       ],
       selectedGroup: 1,
-      selectedLimitDate: ''
+      selectedLimitDate: '',
+
+      newStep: '',
     };
   },
   computed: {
-
+    ...mapGetters('todoModule', ['getStepTaskStore']),
     idUser() {
       const authData = getAuthData();
       return authData.idUser;
@@ -121,7 +185,8 @@ export default {
   },
   watch: {
     selectedTask(newSelectedTask) {
-      this.localTask = { ...newSelectedTask }; // Update localTask when selectedTask changes
+      this.localTask = { ...newSelectedTask };
+      this.fetchStepTask();
     },
     selectedLimitDate() {
       this.selectedLimitDate = this.localTask.limitTask
@@ -129,27 +194,7 @@ export default {
 
   },
   methods: {
-    async updateTask() {
-      try {
-        // Armar un objeto con todas las propiedades actualizadas
-        const updatedTaskData = {
-          ...this.localTask, // Copiar todas las propiedades existentes
-          nameTask: this.localTask.nameTask,
-          detailTask: this.localTask.detailTask,
-          statusTask: this.localTask.statusTask,
-          limitTask: this.localTask.limitTask, // Ejemplo de otra propiedad
-          priorityTask: this.localTask.priorityTask, // Ejemplo de otra propiedad
-        };
-        this.$emit('task-updated', this.localTask.idTask);
-        // Llamar a la función editTask con el ID de la tarea y los datos actualizados
-        await editTask(this.localTask.idTask, updatedTaskData);
 
-        // Por ejemplo, actualiza la lista de tareas llamando a fetchTask
-        console.log('Task updated successfully');
-      } catch (error) {
-        console.error('Error updating task:', error);
-      }
-    },
 
     async updateTaskGeneral() {
       try {
@@ -168,10 +213,22 @@ export default {
         console.error('Error updating task:', error);
       }
     },
-
+    async addStepTask(step) {
+      console.log("addStep", step)
+      try {
+        await addStepTask(this.$store, step);
+      } catch (error) {
+        console.error('Error updating task:', error);
+      }
+    },
+    async fetchStepTask() {
+      await getStepTasks(this.$store, this.selectedTask.idTask);
+    },
     getStarFill() {
       this.selectedLimitDate = this.localTask.limitTask,
         this.selectedGroup = this.localTask.idCategory;
+
+      this.localSteps[0].idTask = this.localTask.idTask;
       return this.localTask.priorityTask === "false" ? "lightgray" : "yellow";
     },
     updateSelectedDate(date) {
@@ -179,6 +236,11 @@ export default {
       this.localTask.limitTask = date;
     },
 
+    addStep() {
+      this.newStep = ''; // Limpiar el campo después de agregar
+      this.addStepTask(this.localSteps[0]);
+      this.localSteps[0].nameStepTask = ""
+    },
   },
 };
 </script>

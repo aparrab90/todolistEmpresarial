@@ -1,8 +1,8 @@
 <template>
     <div>
-        <small>
+        <!-- <small>
             Menu: {{ menu }}
-        </small>
+        </small> -->
         <div class="text-end">
 
             <span class="b text-primary font-weight-bold  rounded-circle h4">
@@ -46,7 +46,9 @@
             </template>
 
             <template #cell(idCategory)="row">
-                <span>| {{ verificarCategory(row.item.idCategory) }}</span>
+                <div class="text-left">
+                    <span class="bg-light">{{ verificarCategory(row.item.idCategory) }}</span>
+                </div>
             </template>
             <template #cell(limitTask)="row">
                 {{ formatDate(row.item.limitTask) }}
@@ -98,7 +100,7 @@ export default {
                 { key: 'checkbox', label: 'Done', thClass: 'text-center col-md-1', tdClass: 'text-center col-md' },
                 { key: 'nameTask', label: 'Name', thClass: 'col-md-3' },
                 { key: 'detailTask', label: 'Description', thClass: 'col-md-4' },
-                { key: 'idCategory', label: 'Category', thClass: 'col-md-1', tdClass: 'text-left col-md' },
+                { key: 'idCategory', label: 'Category', thClass: 'col-md-1', tdClass: 'text-center col-md' },
                 { key: 'limitTask', label: 'Limit', thClass: 'col-md-3' },
                 { key: 'edit', label: '', thClass: 'col-md' },
                 { key: 'idTask', label: '', thClass: 'col-md' },

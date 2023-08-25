@@ -47,6 +47,32 @@ export const addTask = async (store, taskData) => {
   }
 };
 
+export const addStepTask = async (store, taskData) => {
+  console.log("api addstep", taskData);
+  try {
+    const { token } = getAuthData();
+
+    const response = await apiClient.post(
+      "/api/StepTasks/StepTaskRegistro",
+      {
+        ...taskData,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    store.commit("todoModule/addStepTaskStore", response.data);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error al agregar tarea:", error.message);
+    throw error;
+  }
+};
+
 export const getTasks = async (store, userId) => {
   try {
     const { token } = getAuthData();
@@ -66,6 +92,29 @@ export const getTasks = async (store, userId) => {
     store.commit("todoModule/addAllTaskStore", response.data);
 
     return mappedTasks;
+  } catch (error) {
+    console.error("SALIDA ERROR", error.message);
+    return [];
+  }
+};
+export const getStepTasks = async (store, taskId) => {
+  try {
+    const { token } = getAuthData();
+
+    const response = await apiClient.get(
+      `/api/StepTasks/GetStepTasks/${taskId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log("respuesa todos steps", response.data);
+
+    // Agregar las tareas al store utilizando la mutación
+    store.commit("todoModule/getStepTasksStore", response.data);
+
+    return response.data;
   } catch (error) {
     console.error("SALIDA ERROR", error.message);
     return [];
@@ -101,23 +150,25 @@ export const getTasksTodo = async (store, userId) => {
 export const getTasksPriority = async (store, userId) => {
   try {
     const { token } = getAuthData();
-  
+
     const response = await apiClient.get(`/api/Tasks/GetTasksUser/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-  
+
     const mappedTasks = response.data.map((task) => ({
       ...task,
       statusTask: task.statusTask === "0" ? "false" : task.statusTask,
     }));
-  
-    const filteredTasks = mappedTasks.filter((task) => task.priorityTask === "true");
-  
+
+    const filteredTasks = mappedTasks.filter(
+      (task) => task.priorityTask === "true"
+    );
+
     // Agregar las tareas filtradas al store utilizando la mutación
     store.commit("todoModule/addAllTaskStore", filteredTasks);
-  
+
     return filteredTasks;
   } catch (error) {
     console.error("SALIDA ERROR", error.message);
@@ -180,7 +231,7 @@ export const editTaskPriority = async (store, taskId, newPriority) => {
   }
 };
 
-export const editTask = async (store,taskId, updatedTaskData) => {
+export const editTask = async (store, taskId, updatedTaskData) => {
   try {
     const { token } = getAuthData();
 
@@ -255,4 +306,6 @@ export default {
   registerUser,
   addTask,
   getTasks,
+  getStepTasks,
+  addStepTask
 };

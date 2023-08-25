@@ -1,5 +1,4 @@
-
 export default () => ({
-    todoList: []
-})
-
+  todoList: [],
+  stepList: [],
+});
