@@ -2,8 +2,8 @@ export const addTaskStore = (state, dataList) => {
   state.todoList.push(dataList);
 };
 export const addAllTaskStore = (state, taskList) => {
-  state.todoList = []; 
-  state.todoList.push(...taskList); 
+  state.todoList = [];
+  state.todoList.push(...taskList);
 };
 export const addStepTaskStore = (state, dataList) => {
   state.stepList.push(dataList);
@@ -25,15 +25,19 @@ export const editStatusTaskStore = (state, taskId) => {
   });
 };
 export const editStepStatusTaskStore = (state, taskId) => {
-  console.log("nueva mut", state, taskId)
-  // state.todoList = state.todoList.map((task) => {
-  //   if (task.idTask === taskId) {
-  //     console.log("status actual", task.statusTask);
-  //     task.statusTask = task.statusTask === "true" ? "false" : "true";
-  //     console.log("status cambio a ", task.statusTask);
-  //   }
-  //   return task;
-  // });
+  state.stepList = state.stepList.map((task) => {
+    console.log("MUT ID", taskId);
+    console.log("MUT DATOS", task);
+    console.log("MUT DATOS", task.idStepTask);
+    if (task.idStepTask === taskId) {
+      console.log("status actual", task.statusTask);
+      task.statusStepTask = task.statusStepTask === "true" ? "false" : "true";
+      console.log("status cambio a ", task.statusTask);
+    }
+    return task;
+  });
+
+  console.log("datos step actualizados", state.stepList)
 };
 export const editPriorityTaskStore = (state, taskId) => {
   state.todoList = state.todoList.map((task) => {

@@ -219,7 +219,7 @@ export const editStepStatusTask = async (store, taskId, newPriority) => {
       }
     );
 
-    store.commit("todoModule/editStatusTaskStore", taskId);
+    store.commit("todoModule/editStepStatusTaskStore", taskId);
     console.log(
       "Respuesta de API al editar prioridad de tarea:",
       response.data

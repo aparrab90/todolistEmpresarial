@@ -2,7 +2,7 @@
   <div>
     <HeaderView />
 
-    <div class="container-fluid d-flex flex-column pt-0 mt-5" style="height:50%">
+    <div class="container-fluid d-flex flex-column pt-0 mt-5" style="height:85vh; overflow-y: scroll;">
       <div class="row flex-grow-1 mt-3 m-2">
         <!-- Usar el componente MenuView para mostrar el menú -->
         <MenuView :items="navigationItems" @selectItem="handleNavigation" class="col bg-light mt-2" />
@@ -11,21 +11,21 @@
           <div v-show="activeNavItem === 'Todo'">
             <TaskForm @show-task-detail="handleShowTaskDetail" @task-added="handleTaskAdded" @update-task="actualizar" />
             <b-card class="mt-1">
-              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask"
-                :refresh="refresh" />
-
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" @edit-task-hidden="handleEditTaskHidden"
+                :menu="activeNavItem" :selectedTask="selectedTask" :refresh="refresh" />
+              {{ showTaskDetail }}
             </b-card>
           </div>
           <div v-show="activeNavItem === 'Important'">
             <b-card class="mt-3">
-              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask"
-                :refresh="refresh" />
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" @edit-task-hidden="handleEditTaskHidden"
+                :menu="activeNavItem" :selectedTask="selectedTask" :refresh="refresh" />
             </b-card>
           </div>
           <div v-show="activeNavItem === 'All Tasks'">
             <b-card class="mt-3">
-              <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask"
-                :refresh="refresh" />
+              <TaskList :tasks="tasks" @edit-task="handleEditTask" @edit-task-hidden="handleEditTaskHidden"
+                :menu="activeNavItem" :selectedTask="selectedTask" :refresh="refresh" />
               <!-- <TaskList :tasks="tasks" @edit-task="handleEditTask" :menu="activeNavItem" :selectedTask="selectedTask" /> -->
             </b-card>
           </div>
@@ -95,6 +95,10 @@ export default {
     handleEditTask(task) {
       this.selectedTask = task; // Set the selected task
       this.showTaskDetail = true; // Show the task detail component
+    },
+    handleEditTaskHidden() {
+      this.selectedTask = null; // Set the selected task
+      this.showTaskDetail = false; // Show the task detail component
     },
     actualizar(updatedTasks) {
       this.tasks = updatedTasks; // Actualizar la lista de tareas con la nueva lista

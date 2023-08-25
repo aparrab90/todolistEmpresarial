@@ -3,6 +3,7 @@
         <!-- <small>
             Menu: {{ menu }}
         </small> -->
+      
         <div class="text-end">
 
             <span class="b text-primary font-weight-bold  rounded-circle h4">
@@ -62,7 +63,7 @@
                 </div>
             </template>
             <template #cell(idTask)="row">
-                <div v-if="getTaskCellClass(row.item.idTask)['ident']">
+                <div @click="editTaskHidden()" v-if="getTaskCellClass(row.item.idTask)['ident']">
                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
                         :fill="getTaskCellClass(row.item.idTask)['color']" class="bi bi-chevron-compact-right"
                         viewBox="0 0 16 16">
@@ -70,11 +71,9 @@
                             d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z" />
                     </svg>
 
-
                 </div>
             </template>
         </b-table>
-
 
     </div>
 </template>
@@ -151,6 +150,10 @@ export default {
     methods: {
         editTask(idTask) {
             this.$emit('edit-task', idTask);
+        },
+        editTaskHidden() {
+            console.log("aqui")
+            this.$emit('edit-task-hidden');
         },
         handleEditTask(task) {
             this.editTask(task);

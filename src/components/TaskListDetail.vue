@@ -58,6 +58,13 @@
             </b-form-group>
           </div>
         </b-col>
+        <b-col lg="12">
+          <div class="text-end m-1 bg-light">
+            <b-button @click="updateTaskGeneral" variant="success" title="Save">
+              <b-icon icon="save" ></b-icon>
+            </b-button>
+          </div>
+        </b-col>
       </b-row>
       <b-row class="text-left">
         <b-col>
@@ -89,13 +96,14 @@
 
         </b-col> -->
         <div class="col d-flex justify-content-center align-items-center">
-          <div v-if="step.statusStepTask== 'false'" class="text-center">
+          <div v-if="step.statusStepTask == 'false'" class="text-center">
             <!-- <div class="form-check">
               <input class="form-check-input text- " type="" variant="primary"
                 v-model="step.statusStepTask" style="transform: scale(2); border-radius: 2rem;"
                 @change="handleCheckboxChange(step)">
               </div> -->
-              <b-icon icon="circle-fill" class="text-white h2 border rounded-circle border-gray-3"  @click="handleCheckboxChange(step)"></b-icon>
+            <b-icon icon="circle-fill" class="text-white h2 border rounded-circle border-gray-3"
+              @click="handleCheckboxChange(step)"></b-icon>
           </div>
           <div v-else>
             <div>
@@ -147,18 +155,18 @@
       <!-- {{ localStepsTask }} -->
       <!-- {{ getStepTaskStore }} -->
 
-      <template #footer>
+      <!-- <template #footer>
         <div class="text-end">
           <b-button @click="updateTaskGeneral" variant="success">Save</b-button>
         </div>
-      </template>
+      </template> -->
     </b-card>
   </div>
 </template>
   
 <script>
 import { getAuthData } from '@/services/auth'; // Ajusta la ruta a tu ubicación
-import { editTask, addStepTask, getStepTasks, editStepStatusTask} from '@/services/api';
+import { editTask, addStepTask, getStepTasks, editStepStatusTask } from '@/services/api';
 import moment from 'moment';
 import { mapGetters } from 'vuex';
 export default {
@@ -268,7 +276,7 @@ export default {
     async updateStatusTask(dataTask) {
       console.log("new priority", dataTask)
       try {
-        const oppositeStatus = dataTask.statusStepTask === '"true"' ? '"false"' : '"true"'; 
+        const oppositeStatus = dataTask.statusStepTask === '"true"' ? '"false"' : '"true"';
         const newTasks = await editStepStatusTask(this.$store, dataTask.idStepTask, oppositeStatus);
         this.tasks = newTasks; //this.fetchTask();
       } catch (error) {
