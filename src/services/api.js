@@ -180,7 +180,7 @@ export const editTaskPriority = async (store, taskId, newPriority) => {
   }
 };
 
-export const editTask = async (taskId, updatedTaskData) => {
+export const editTask = async (store,taskId, updatedTaskData) => {
   try {
     const { token } = getAuthData();
 
@@ -199,7 +199,7 @@ export const editTask = async (taskId, updatedTaskData) => {
         },
       }
     );
-    // store.commit("todoModule/editTaskStore", response.data);
+    store.commit("todoModule/editTaskStore", updatedTaskData);
     return response.data;
   } catch (error) {
     console.error("Error al editar tarea:", error.message);

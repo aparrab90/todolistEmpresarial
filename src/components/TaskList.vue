@@ -1,14 +1,15 @@
 <template>
     <div>
-        {{ menu }}
+        <small>
+            Menu: {{ menu }}
+        </small>
         <div class="text-end">
 
             <span class="b text-primary font-weight-bold  rounded-circle h4">
                 <small class="text-secondary">Tasks</small> | <span> {{ taskCount }}</span>
             </span>
         </div>
-        <b-table :fields="filteredFields" :items="getTaskStore" responsive head-variant="light" class="table table-sm"
-           >
+        <b-table :fields="filteredFields" :items="getTaskStore" responsive head-variant="light" class="table table-sm">
 
 
             <template #cell(priorityTask)="row">
@@ -44,6 +45,9 @@
                 </div>
             </template>
 
+            <template #cell(idCategory)="row">
+                <span>| {{ verificarCategory(row.item.idCategory) }}</span>
+            </template>
             <template #cell(limitTask)="row">
                 {{ formatDate(row.item.limitTask) }}
             </template>
@@ -90,10 +94,11 @@ export default {
         return {
             internalPage: this.currentPage,
             filteredFields: [
-                { key: 'priorityTask', label: '', thClass: 'col-md-1' },
-                { key: 'checkbox', label: 'Done', thClass: 'text-center col-md-1', tdClass: 'text-center col-md-1' },
+                { key: 'priorityTask', label: '', thClass: 'col-md' },
+                { key: 'checkbox', label: 'Done', thClass: 'text-center col-md-1', tdClass: 'text-center col-md' },
                 { key: 'nameTask', label: 'Name', thClass: 'col-md-3' },
                 { key: 'detailTask', label: 'Description', thClass: 'col-md-4' },
+                { key: 'idCategory', label: 'Category', thClass: 'col-md-1', tdClass: 'text-left col-md' },
                 { key: 'limitTask', label: 'Limit', thClass: 'col-md-3' },
                 { key: 'edit', label: '', thClass: 'col-md' },
                 { key: 'idTask', label: '', thClass: 'col-md' },
@@ -114,7 +119,14 @@ export default {
             localArray: [],
             taskListStyle: '',
             reviewPriority: false,
-            menuPriority: ''
+            menuPriority: '',
+            groupOptions: [
+                { value: 1, text: 'Personal' },
+                { value: 2, text: 'Estudio' },
+                { value: 3, text: 'Trabajo' },
+                { value: 4, text: 'Viaje' },
+                { value: 5, text: 'Investigación' },
+            ],
         };
     },
     computed: {
@@ -198,7 +210,10 @@ export default {
                 return '';
             }
         },
-
+        verificarCategory(idCategory) {
+            const selectedCategory = this.groupOptions.find((category) => category.value === idCategory);
+            return selectedCategory ? selectedCategory.text : '';
+        },
 
     },
     watch: {

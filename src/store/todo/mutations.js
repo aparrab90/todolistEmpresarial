@@ -31,3 +31,21 @@ export const editPriorityTaskStore = (state, taskId) => {
     return task;
   });
 };
+export const editTaskStore = (state, updatedTaskData) => {
+  const taskIdToUpdate = updatedTaskData.idTask;
+
+  // Buscar la tarea en el estado y actualizar sus campos
+  state.todoList = state.todoList.map((task) => {
+    if (task.idTask === taskIdToUpdate) {
+      // Actualizar los campos relevantes
+      task.nameTask = updatedTaskData.nameTask;
+      task.detailTask = updatedTaskData.detailTask;
+      task.statusTask = updatedTaskData.statusTask;
+      task.limitTask = updatedTaskData.limitTask;
+      task.priorityTask = updatedTaskData.priorityTask;
+      task.idUser = updatedTaskData.idUser;
+      task.idCategory = updatedTaskData.idCategory;
+    }
+    return task;
+  });
+};
